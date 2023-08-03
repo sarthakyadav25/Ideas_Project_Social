@@ -58,7 +58,49 @@
     opacity: 0.15;
   }
   .app {
-    @apply relative z-10 flex justify-center items-center flex-col max-w-7xl sm:px-16 px-6;
+    @apply relative z-10 flex justify-center items-center flex-col gap-0 max-w-7xl sm:px-16 px-6;
+  }
+
+  /* Preloader */
+  .preloader-container {
+    display: flex;
+    font-size: 3rem;
   }
   
+  .preloader-letter {
+    opacity: 0;
+    animation: typing 0.3s steps(1, end), blinking 0.5s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: auto;
+    }
+  }
+  
+  @keyframes blinking {
+    from,
+    to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #f72585;
+    }
+  }
+  
+  .invisible {
+    animation: erasing 0.3s steps(1, end) 2s;
+  }
+  
+  @keyframes erasing {
+    from {
+      width: auto;
+    }
+    to {
+      width: 0;
+    }
+  }
   

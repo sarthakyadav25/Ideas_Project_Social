@@ -1,9 +1,7 @@
 import '@/styles/globals.css'
-import { Metadata } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head';
 import Navbar from '@/components/navbar';
-import AddButton from '@/components/AddBtn';
 
 const metadata = {
   title: 'Think.Devs',
@@ -11,6 +9,7 @@ const metadata = {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+
   return (
     <div>
       <div className='main'>
@@ -24,7 +23,6 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className='app'>
             <Navbar />
             <Component {...pageProps} />
-            <AddButton />
 
           </div>
       </div>
