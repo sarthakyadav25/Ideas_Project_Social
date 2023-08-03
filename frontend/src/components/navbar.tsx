@@ -11,7 +11,7 @@ const Navbar = () => {
   const [toggleDropdown, settoggleDropdown] = useState(false)
 
   return (
-    <nav className='flex justify-between  items-start w-full mb-16 pt-3'>
+    <nav className=' flex justify-between items-start w-full mb-5 pt-3'>
         <Link href="/" className='flex gap-2 flex-center'>
           <span className=' text-2xl font-bold'>Think.<span className='text-[#d61e92]'>Devs</span></span>
         </Link>
