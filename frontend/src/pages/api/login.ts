@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       // TODO: Replace this with your actual Django backend URL and endpoint for user login
-      const response = await axios.post('http://your-django-backend-url/api/login', {
+      const response = await axios.post('http://localhost:8000/api/login', {
         email,
         password,
       });

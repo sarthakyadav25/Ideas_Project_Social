@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       // TODO: Add your Django backend URL here
-      const response = await axios.post('http://your-django-backend-url/api/signup', {
+      const response = await axios.post('http://localhost:8000/api/signup', {
         email,
         username,
         password,

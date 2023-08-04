@@ -26,25 +26,23 @@ class RegisterApi(APIView):
             if User.objects.filter(username=username).exists():
                 return Response({
                     "message":"username "+username+ " already exists"
-                })
+                },status=status.HTTP_226_IM_USED)
             elif User.objects.filter(email = email).exists():
                 return Response({
                     "message":"email already in use"
-                })
+                },status=status.HTTP_226_IM_USED)
 
             user = User.objects.create_user(username=username,email=email,password=password)
             user.save()
             return Response({
-                'status':200,
                 'username': username,
-                'password':password,
                 'email':email
-            })
+            },status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({
                 "message":"unknown error occured"
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
 class LoginApi(APIView):
 
