@@ -1,16 +1,12 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 // Define types for form data and errors
-interface FormData {
-  email: string;
-  username: string;
-  password: string;
-}
 
 interface Errors {
   email?: string;
@@ -18,35 +14,27 @@ interface Errors {
   password?: string;
 }
 
-const Signup: React.FC = () => {
+const Signup = () => {
   // State to manage form data and errors
-  const [formData, setFormData] = useState<FormData>({
-    email: '',
-    username: '',
-    password: '',
-  });
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const [errors, setErrors] = useState<Errors>({});
 
-  // Function to handle form field changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: SyntheticEvent)=> {
     e.preventDefault();
 
     // Basic form validation
     const newErrors: Errors = {};
-    if (!formData.email) {
+    if (!email) {
       newErrors.email = 'Email is required.';
     }
-    if (!formData.username) {
+    if (!username) {
       newErrors.username = 'Username is required.';
     }
-    if (!formData.password) {
+    if (!password) {
       newErrors.password = 'Password is required.';
     }
 
@@ -55,25 +43,12 @@ const Signup: React.FC = () => {
       return;
     }
 
-    try {
-      // Make the API call to your Django backend for user signup
-      const response = await axios.post('/api/signup', formData);
-
-      console.log(response.data); // Log the API response
-
-      // Show success toast here (not implemented in the simulation)
-      toast.success('Account created successfully!');
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response) {
-        console.error(axiosError.response.data); // Log the error response from the API
-      } else {
-        console.error('Server Error'); // Log a generic server error if response is not available
-      }
-
-      // Show error toast here if signup fails (not implemented in the simulation)
-      toast.error('Account creation failed. Please try again later.');
-    }
+    await fetch('http://localhost:8000/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+    await router.push('/login');
   };
 
   return (
@@ -83,7 +58,7 @@ const Signup: React.FC = () => {
         <div className="space-y-4">
           {/* Signup with Google */}
           <button
-            className="flex items-center justify-center w-full py-2.5 px-6 bg-[#000000] text-white rounded-lg"
+            className="flex items-center justify-center w-full py-2.5 px-6 border-2 border-black  text-black rounded-lg"
             onClick={() => alert('Signup with Google clicked!')}
           >
             <FaGoogle className="mr-2" />
@@ -92,7 +67,7 @@ const Signup: React.FC = () => {
 
           {/* Signup with GitHub */}
           <button
-            className="flex items-center justify-center w-full py-2.5 px-6 bg-[#000000]  text-white rounded-lg"
+            className="flex items-center justify-center w-full py-2.5 px-6 border-solid border-2 border-black  text-black rounded-lg"
             onClick={() => alert('Signup with GitHub clicked!')}
           >
             <FaGithub className="mr-2" />
@@ -110,8 +85,8 @@ const Signup: React.FC = () => {
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={e=>setEmail(e.target.value)}
                 className={`w-full border ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
@@ -129,8 +104,8 @@ const Signup: React.FC = () => {
                 type="text"
                 id="username"
                 name="username"
-                value={formData.username}
-                onChange={handleChange}
+                value={username}
+                onChange={e=>setUsername(e.target.value)}
                 className={`w-full border ${
                   errors.username ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
@@ -148,8 +123,8 @@ const Signup: React.FC = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={e=>setPassword(e.target.value)}
                 className={`w-full border ${
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
