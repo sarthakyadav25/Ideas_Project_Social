@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 export default function Home() {
   const isUserLoggedIn = true;
+  
   const [toggleDropdown, settoggleDropdown] = useState(false)
   return (
     <section className='w-full flex justify-center items-center flex-col'>

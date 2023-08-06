@@ -5,10 +5,17 @@ import Link from 'next/link'
 import React from 'react'
 import { useState, useEffect} from 'react'
 
-
 const Navbar = () => {
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = false;
   const [toggleDropdown, settoggleDropdown] = useState(false)
+  const [message, setMessage] = useState('');
+  useEffect(() => {
+    (
+      async () => {
+        const response = await fetch('http://localhost:8000/api/user');
+      }
+    )
+  });
 
   return (
     <nav className=' flex justify-between items-start w-full mb-5 pt-3'>
@@ -18,6 +25,7 @@ const Navbar = () => {
 
         {/* Desktop navigation */}
         <div className='sm:flex hidden'>
+        
           {isUserLoggedIn ? (
             <div className='flex gap-3 md:gap-5'>
               <Link href="/Saved" className="rounded-full relative inline-flex items-center justify-center px-5 py-2.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900  group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white ">
@@ -31,16 +39,24 @@ const Navbar = () => {
               </span>
               </button>
               <Link href="/profile">
-                <img src='next.svg'
+                <img src='favicon.ico'
                 width={37} height={37} className='rounded-full '
                 alt="Profile Image"/>
               </Link>
             </div> ) :
             (
               <>
-                {/* TODO:
-                  Adding SignIN Logic and Providers
-                */}
+                {
+                  (
+                    <Link href="/login">
+                      <button className="rounded-full relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900  group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white " >
+                      <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white text-black rounded-full group-hover:bg-opacity-0 group-hover:text-white">
+                        Sign In
+                      </span>
+                      </button>
+                    </Link>
+                  )
+                }
               </>
             )
         }

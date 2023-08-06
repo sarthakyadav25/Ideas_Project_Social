@@ -73,7 +73,7 @@ class LoginApi(APIView):
                     csrf.get_token(request)
                     res.data = {
                         'refresh':str(refresh),
-                        'access':str(refresh.access_token)
+                        'access':str(refresh.access_token),
                     }
                     return res
             else:

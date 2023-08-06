@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
 import Link from 'next/link';
-import axios, { AxiosError } from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 // Define types for form data and errors
 interface FormData {
@@ -15,19 +15,19 @@ interface Errors {
   password?: string;
 }
 
-const Login: React.FC = () => {
+const Login = () => {
   
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
 
   
 
+  const router = useRouter();
   // Function to handle form submission
   const handleSubmit = async (e: SyntheticEvent)=> {
     e.preventDefault();
-
+    
     // Basic form validation
     const newErrors: Errors = {};
     if (!username) {
@@ -43,13 +43,44 @@ const Login: React.FC = () => {
     }
 
     // POST form data to API endpoint
-    await fetch('http://localhost:8000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ username, password }),
-    });
-    console.log(JSON.stringify({ username, password }));
+    try {
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      
+      // Toast for invalid credentials
+      if (!response.ok) {
+          const data = await response.json();
+          console.log(data);
+          toast.error(`${data.message}`, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000, // Toast will be automatically closed after 2 seconds
+        });
+        
+
+      }else{
+
+        //SuccessToast
+        toast.success('Login successful!', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 3000, // Toast will be automatically closed after 2 seconds
+        });
+        // Assuming the API call was successful, redirect the user to the desired page.
+        // redirecting to home page
+        setTimeout(() => {
+          router.push('/');
+        }, 2000); // 3000 milliseconds (3 seconds) delay
+      }
+  
+      
+    } catch (error) {
+      console.error('An error occurred during login:', error);
+    }
+    
   };
 
   return (
@@ -78,7 +109,7 @@ const Login: React.FC = () => {
             {/* Email Field */}
             <div>
               <label htmlFor="username" className="block font-medium text-gray-700">
-                Email
+                Username
               </label>
               <input
                 type="text"
@@ -89,7 +120,7 @@ const Login: React.FC = () => {
                 className={`w-full border ${
                   errors.username ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
-                placeholder="Enter your email"
+                placeholder="Enter your username"
               />
               {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
             </div>
@@ -122,7 +153,8 @@ const Login: React.FC = () => {
               Login
             </button>
           </form>
-
+          <ToastContainer />
+          
           {/* Don't have an account? Signup */}
           <div className="text-center">
             <p className="text-gray-700">
