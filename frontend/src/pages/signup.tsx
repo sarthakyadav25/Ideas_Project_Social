@@ -1,13 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
-import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
-// Define types for form data and errors
-
+// Define types for errors
 interface Errors {
   email?: string;
   username?: string;
@@ -43,12 +41,13 @@ const Signup = () => {
       return;
     }
 
-    await fetch('http://localhost:8000/api/signup', {
+    await fetch('http://localhost:8000/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password }),
     });
     await router.push('/login');
+    console.log({ username, email, password});
   };
 
   return (

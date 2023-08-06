@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
@@ -11,36 +11,29 @@ interface FormData {
 }
 
 interface Errors {
-  email?: string;
+  username?: string;
   password?: string;
 }
 
 const Login: React.FC = () => {
-  // State to manage form data and errors
-  const [formData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
-  });
-
+  
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
 
-  // Function to handle form field changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
-  };
+  
 
   // Function to handle form submission
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: SyntheticEvent)=> {
     e.preventDefault();
 
     // Basic form validation
     const newErrors: Errors = {};
-    if (!formData.email) {
-      newErrors.email = 'Email is required.';
+    if (!username) {
+      newErrors.username = 'Username is required.';
     }
-    if (!formData.password) {
+    if (!password) {
       newErrors.password = 'Password is required.';
     }
 
@@ -49,25 +42,14 @@ const Login: React.FC = () => {
       return;
     }
 
-    try {
-      // Make the API call to your Django backend for user login
-      const response = await axios.post('/api/login', formData);
-
-      console.log(response.data); // Log the API response
-
-      // Show success toast here (not implemented in the simulation)
-      toast.success('Logged in successfully!');
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response) {
-        console.error(axiosError.response.data); // Log the error response from the API
-      } else {
-        console.error('Server Error'); // Log a generic server error if response is not available
-      }
-
-      // Show error toast here if login fails (not implemented in the simulation)
-      toast.error('Login failed. Please try again later.');
-    }
+    // POST form data to API endpoint
+    await fetch('http://localhost:8000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, password }),
+    });
+    console.log(JSON.stringify({ username, password }));
   };
 
   return (
@@ -95,21 +77,21 @@ const Login: React.FC = () => {
           <form className="space-y-4" onSubmit={handleSubmit} method="post">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block font-medium text-gray-700">
+              <label htmlFor="username" className="block font-medium text-gray-700">
                 Email
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={e=>setUsername(e.target.value)}
                 className={`w-full border ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
+                  errors.username ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
                 placeholder="Enter your email"
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
             </div>
 
             {/* Password Field */}
@@ -121,8 +103,9 @@ const Login: React.FC = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={e=>setPassword(e.target.value)}
+                
                 className={`w-full border ${
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
