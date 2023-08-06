@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
@@ -41,12 +41,23 @@ const Signup = () => {
       return;
     }
 
-    await fetch('http://localhost:8000/api/register', {
+    const response= await fetch('http://localhost:8000/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password }),
     });
-    await router.push('/login');
+    if (response.ok) {
+        // Show the success toast
+        toast.success('Signup successful!', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 2000, // Toast will be automatically closed after 2 seconds
+        });
+
+      // Redirect to the login page
+      setTimeout(() => {
+        router.push('/');
+      }, 3000); 
+    }
     console.log({ username, email, password});
   };
 
@@ -140,6 +151,7 @@ const Signup = () => {
               Create Account
             </button>
           </form>
+          <ToastContainer />
 
           {/* Already have an account? Login */}
           <div className="text-center">
