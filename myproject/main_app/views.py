@@ -95,6 +95,13 @@ class LogoutApi(APIView):
         }
         return res
 
+class CheckLoginApi(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({'loggedIn': True})
+        else:
+            return Response({'loggedIn': False})
+
 class ReturnDataApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
     permission_classes = [IsAuthenticated]

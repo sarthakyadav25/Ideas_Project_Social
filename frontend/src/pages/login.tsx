@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+import { useAuth } from '@/components/authContext'; // Import the useAuth hook
 
-// Define types for form data and errors
 interface FormData {
   email: string;
   password: string;
@@ -16,19 +16,16 @@ interface Errors {
 }
 
 const Login = () => {
-  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
-
-  
+  const { isLoggedIn, setIsLoggedIn } = useAuth(); // Use the useAuth hook
 
   const router = useRouter();
-  // Function to handle form submission
-  const handleSubmit = async (e: SyntheticEvent)=> {
+
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    
-    // Basic form validation
+
     const newErrors: Errors = {};
     if (!username) {
       newErrors.username = 'Username is required.';
@@ -42,7 +39,6 @@ const Login = () => {
       return;
     }
 
-    // POST form data to API endpoint
     try {
       const response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
@@ -51,36 +47,27 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-      
-      // Toast for invalid credentials
+
       if (!response.ok) {
-          const data = await response.json();
-          console.log(data);
-          toast.error(`${data.message}`, {
+        const data = await response.json();
+        console.log(data);
+        toast.error(`${data.message}`, {
           position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000, // Toast will be automatically closed after 2 seconds
+          autoClose: 3000,
         });
-        
-
-      }else{
-
-        //SuccessToast
+      } else {
         toast.success('Login successful!', {
           position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: 3000, // Toast will be automatically closed after 2 seconds
+          autoClose: 3000,
         });
-        // Assuming the API call was successful, redirect the user to the desired page.
-        // redirecting to home page
+        setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
         setTimeout(() => {
           router.push('/');
-        }, 2000); // 3000 milliseconds (3 seconds) delay
+        }, 1000);
       }
-  
-      
     } catch (error) {
       console.error('An error occurred during login:', error);
     }
-    
   };
 
   return (
