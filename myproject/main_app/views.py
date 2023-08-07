@@ -14,9 +14,6 @@ from .authenticate import CustomAuthentication
 
 class RegisterApi(APIView):
 
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
-
     def post(self,request):
         try:
             data = request.data

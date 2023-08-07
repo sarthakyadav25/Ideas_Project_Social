@@ -28,6 +28,8 @@ class Post(models.Model):
     tech_stack = models.CharField(max_length=100)
     project_link = models.CharField(max_length=200)
     project_link = models.CharField(max_length=200)
+    no_of_likes = models.IntegerField(default=0)
+    type = models.CharField(max_length=100,default='Project')
 
     def __str__(self):
         return self.user.username
