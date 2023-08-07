@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     "django_nextjs",
     "rest_framework",
     'rest_framework_simplejwt',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -194,5 +199,27 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_HTTP_ONLY' : True, 
     'AUTH_COOKIE_PATH': '/',        
     'AUTH_COOKIE_SAMESITE': 'Lax',
+}
+
+AUTHENTICATION_BACKENDS = [
+    # Default backend for Django authentication.
+    'django.contrib.auth.backends.ModelBackend',
+
+    # Allauth specific authentication methods, such as login by e-mail.
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Setup allauth parameters
+SITE_ID = 2
+# LOGIN_REDIRECT_URL :- destination of login page in your urls.py
+LOGIN_REDIRECT_URL = 'login'
+# ACCOUNT_LOGOUT_REDIRECT :- where to redirect when user logout
+ACCOUNT_LOGOUT_REDIRECT = 'logout'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
 }
 
