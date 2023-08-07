@@ -1,5 +1,3 @@
-
-
 const Project = () => {
     return (
         <div>
