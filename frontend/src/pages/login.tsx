@@ -61,7 +61,7 @@ const Login = () => {
         setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
         setTimeout(() => {
           router.push('/');
-        }, 1000);
+        },1000 );
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
