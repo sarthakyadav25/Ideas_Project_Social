@@ -22,7 +22,22 @@ export const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      // ... fetch the user's login status from the server and set the isLoggedIn state
+      try {
+        const response = await fetch('http://localhost:8000/api/check', {
+          method: 'GET',
+          credentials: 'include', // Include credentials (e.g., cookies) for cross-origin requests
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsLoggedIn(data.loggedIn); 
+          console.log(data.loggedIn)// Set isLoggedIn to the value received from the API
+        } else {
+          setIsLoggedIn(false); // If the response is not okay, set isLoggedIn to false
+        }
+      } catch (error) {
+        console.error('An error occurred while checking login status:', error);
+      }
     };
 
     checkLoginStatus();
