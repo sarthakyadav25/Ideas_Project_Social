@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
   };
 
   
-  let menu ,menuSm;
+  var menu ,menuSm;
   if(isLoggedIn) {
     menu = (
       
