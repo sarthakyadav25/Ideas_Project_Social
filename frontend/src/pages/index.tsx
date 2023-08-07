@@ -20,6 +20,7 @@ const Home = () => {
       </p>
 
       <Search />
+      {isUserLoggedIn && <AddButton />}
     </section>
   );
 };

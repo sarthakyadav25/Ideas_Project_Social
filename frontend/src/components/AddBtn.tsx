@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import ProjectsForm from './ProjectsForm';
 
 const AddButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,11 +21,10 @@ const AddButton: React.FC = () => {
         <div className="absolute right-0 mt-2 mb-2 w-48  bg-red-200 rounded-md shadow-lg bottom-full overflow-hidden">
           <ul className="">
             <li>
-              <Link href='/ProjectsForm'>
+              <Link href='/project'>
               
               <button className="block px-4 py-2 text-gray-800 hover:bg-black hover:text-white w-full text-left" 
-              onClick={() => {setIsOpen(false)}
-            }
+              onClick={() => {setIsOpen(false)}}
               >
                 Projects
               </button>
