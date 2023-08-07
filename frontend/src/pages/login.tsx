@@ -1,10 +1,9 @@
-import React, { useState, ChangeEvent, FormEvent, SyntheticEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, SyntheticEvent, useEffect } from 'react';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/authContext'; // Import the useAuth hook
-
 interface FormData {
   email: string;
   password: string;
@@ -22,7 +21,6 @@ const Login = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth(); // Use the useAuth hook
 
   const router = useRouter();
-
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
