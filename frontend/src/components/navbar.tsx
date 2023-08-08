@@ -13,8 +13,7 @@ const Navbar: React.FC = () => {
   const router = useRouter();
 
   // TODO: Implement the useEffect to check the user's login status
-
-    
+  
 
 
   const handleLogout = async () => {
@@ -44,7 +43,7 @@ const Navbar: React.FC = () => {
   };
 
   
-  let menu ,menuSm;
+  var menu ,menuSm;
   if(isLoggedIn) {
     menu = (
       
@@ -90,7 +89,7 @@ const Navbar: React.FC = () => {
           <AddButton />
       
       {toggleDropdown && (
-        <div className='absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end'>
+        <div className='absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end,shadow-md'>
           <Link
             href='/profile'
             className='text-sm font-inter text-gray-700 hover:text-gray-500 font-medium'
@@ -146,7 +145,7 @@ const Navbar: React.FC = () => {
       )
     }
   return (
-    <nav className='flex justify-between items-start w-full mb-5 pt-3'>
+    <nav className='flex  justify-between items-start w-full mb-5 pt-3'>
       <Link href='/' className='flex gap-2 flex-center'>
         <span className='text-2xl font-bold'>
           Think.<span className='text-[#d61e92]'>Devs</span>

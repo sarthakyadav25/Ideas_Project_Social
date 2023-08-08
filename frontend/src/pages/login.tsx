@@ -1,13 +1,9 @@
-import React, { useState, ChangeEvent, FormEvent, SyntheticEvent, useEffect } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/components/authContext'; // Import the useAuth hook
-interface FormData {
-  email: string;
-  password: string;
-}
+import  {useAuth}  from '@/components/authContext';
 
 interface Errors {
   username?: string;
@@ -18,9 +14,10 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
-  const { isLoggedIn, setIsLoggedIn } = useAuth(); // Use the useAuth hook
 
+  const { isLoggedIn, setIsLoggedIn } = useAuth(); // Use the useAuth hook
   const router = useRouter();
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
@@ -48,20 +45,19 @@ const Login = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        console.log(data);
         toast.error(`${data.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
       } else {
+        setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
         toast.success('Login successful!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
         });
-        setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
-        setTimeout(() => {
+        // Store the JWT token in cookies
+
           router.push('/');
-        }, 1000);
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
@@ -101,10 +97,9 @@ const Login = () => {
                 id="username"
                 name="username"
                 value={username}
-                onChange={e=>setUsername(e.target.value)}
-                className={`w-full border ${
-                  errors.username ? 'border-red-500' : 'border-gray-300'
-                } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
+                onChange={(e) => setUsername(e.target.value)}
+                className={`w-full border ${errors.username ? 'border-red-500' : 'border-gray-300'
+                  } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
                 placeholder="Enter your username"
               />
               {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
@@ -120,11 +115,9 @@ const Login = () => {
                 id="password"
                 name="password"
                 value={password}
-                onChange={e=>setPassword(e.target.value)}
-                
-                className={`w-full border ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
-                } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full border ${errors.password ? 'border-red-500' : 'border-gray-300'
+                  } rounded-lg px-3 py-2 focus:outline-none focus:border-#ec1c92`}
                 placeholder="Enter your password"
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
@@ -139,12 +132,12 @@ const Login = () => {
             </button>
           </form>
           <ToastContainer />
-          
+
           {/* Don't have an account? Signup */}
           <div className="text-center">
             <p className="text-gray-700">
               Don't have an account?{' '}
-              <Link href="/signup"className="text-primary-600">Sign up
+              <Link href="/signup" className="text-primary-600">Sign up
               </Link>
             </p>
           </div>

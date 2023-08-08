@@ -19,6 +19,17 @@ const NextBugfender = {
         Bugfender.error(messages.join( ))
     },
 
+    sendUserFeedback: (key, value) => {
+        Bugfender.sendUserFeedback(key, value)
+    },
+
+    sendIssue: (key, value) => {
+        Bugfender.sendIssue(key, value)
+    },
+
+    sendCrash: (key, value) => {
+        Bugfender.sendCrash(key, value)
+    }
 
 }
 

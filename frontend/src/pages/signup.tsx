@@ -54,9 +54,7 @@ const Signup = () => {
         });
 
       // Redirect to the login page
-      setTimeout(() => {
-        router.push('/');
-      }, 3000); 
+        router.push('/login');
     }
     console.log({ username, email, password});
   };

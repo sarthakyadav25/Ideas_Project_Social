@@ -18,6 +18,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/NextBugfender.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/BugfenderComp.jsx"],
   "exclude": ["node_modules"]
 }
