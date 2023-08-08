@@ -10,12 +10,27 @@ class LikedPostSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
+        fields = ('bio',)
+
+class SendProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
         fields = '__all__'
 
-class PostSerializer(serializers.ModelSerializer):
+class ProjectPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ('title','description','tech_stack','project_link_github',)
+
+class IdeaPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('title','description',)
+
+class SendPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = "__all__"
 
 class SavedPostSerializer(serializers.ModelSerializer):
     class Meta:

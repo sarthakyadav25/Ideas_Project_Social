@@ -8,12 +8,11 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    id_user = models.IntegerField()
     bio = models.TextField(blank=True)
     email = models.CharField(max_length=100)
     interested_tech_stacks = models.CharField(max_length=100)
-    cover_pic = models.ImageField(upload_to='cover_pics',default='default_cover_pic')
-    profile_pic = models.ImageField(upload_to='profile_pics',default='default_profile_pic')
+    cover_pic = models.ImageField(upload_to='cover_pics',default='default_cover_pic.jpg')
+    profile_pic = models.ImageField(upload_to='profile_pics',default='default_profile_pic.png')
 
     def __str__(self):
         return self.user.username
@@ -26,8 +25,8 @@ class Post(models.Model):
     description = models.TextField()
     problem_statement = models.TextField(blank=True)
     tech_stack = models.CharField(max_length=100)
-    project_link = models.CharField(max_length=200)
-    project_link = models.CharField(max_length=200)
+    project_link_github = models.CharField(max_length=200,default="#")
+    project_link_live = models.CharField(max_length=200,default="#")
     no_of_likes = models.IntegerField(default=0)
     type = models.CharField(max_length=100,default='Project')
 
