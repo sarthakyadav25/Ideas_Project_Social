@@ -34,6 +34,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <AuthProvider>
           < Navbar />
           <Component {...pageProps} />
+          {/* </> */}
           <ToastContainer />
     </AuthProvider>
         </div>

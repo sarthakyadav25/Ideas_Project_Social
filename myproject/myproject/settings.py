@@ -127,12 +127,12 @@ USE_TZ = True
 
 #TODO: CORS_ORIGIN_ALLOW_ALL = True
 # Allow requests from Next.js development server
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+# ]
 CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type']
 
 # Static files (CSS, JavaScript, Images)

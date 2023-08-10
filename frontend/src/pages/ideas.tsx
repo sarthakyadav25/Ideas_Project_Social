@@ -1,115 +1,149 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface Idea {
+interface ideasData {
   title: string;
   description: string;
-  problemStatement: string;
-  postPic: File | null;
+  tech_stack: string;
+  project_link_github: string;
+  project_link_live: string;
+  problem_statement: string;
 }
 
-const Idea: React.FC = () => {
-  const [formData, setFormData] = useState<Idea>({
+const UploadProjectForm: React.FC = () => {
+  const [ideasData, setideasData] = useState<ideasData>({
     title: '',
     description: '',
-    problemStatement: '',
-    postPic: null,
+    tech_stack: '',
+    project_link_github: '',
+    project_link_live: '',
+    problem_statement: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+  
+const handleSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
+
+  // Perform frontend validation
+  if (
+    !ideasData.title ||
+    !ideasData.description 
+  ) {
+    toast.error('Please fill in all required fields.');
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('title', ideasData.title);
+    formData.append('description', ideasData.description);
+    formData.append('tech_stack', ideasData.tech_stack);
+    formData.append('project_link_github', ideasData.project_link_github);
+    formData.append('project_link_live', ideasData.project_link_live);
+    formData.append('problem_statement', ideasData.problem_statement);
+    
+  
+
+    const response = await fetch('http://localhost:8000/api/post_idea', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+      body: formData,
+    });
+
+    console.log('API Response:', response);
+    const data = await response.json();
+    console.log('Data:', data);
+    if (response.ok) {
+      if (data.message) {
+        toast.success(data.message);
+      }
+    
+      console.log(data);
+      // Clear form data after successful submission
+      setideasData({
+        title: '',
+        description: '',
+        tech_stack: '',
+        project_link_github: '',
+        project_link_live: '',
+        problem_statement: '',
+      });
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error('An error occurred');
+  }
+};
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setideasData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const postPic = e.target.files[0];
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        postPic,
-      }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Implement your form submission logic here, for example, sending data to the server.
-    // formData object contains all the form fields.
-    console.log(formData);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    setideasData((prevData) => ({
+      ...prevData,
+      post_pic: file,
+    }));
   };
 
   return (
-    <div className=" bg-white shadow-md rounded-lg p-6 h-full m-4">
-      <h2 className="text-center text-3xl font-bold mb-6 text-pink-600">Share Your Idea</h2>
-      <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-          <label htmlFor="postPic" className="">
-            Post Picture
-          </label>
-          <input
-            type="file"
-            name="postPic"
-            id="postPic"
-            onChange={handleFileChange}
-            className='mt-1 px-4 py-2 w-full bg-[#e4e4f4]  border-none  rounded-md outline-none'
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="mt-1 px-4 py-2 w-full bg-[#e4e4f4]  border-none  rounded-md outline-none"
-            placeholder='Title'
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="mt-1 px-4 py-2 w-full h-full  bg-[#e4e4f4]  border-none  rounded-md outline-none resize-none"
-            rows={2}
-            placeholder="Description"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="problemStatement" className="block text-sm font-medium text-gray-700">
-            Problem Statement
-          </label>
-          <textarea
-            name="problemStatement"
-            id="problemStatement"
-            value={formData.problemStatement}
-            onChange={handleChange}
-            className="mt-1 px-4 py-2 w-full h-full bg-[#e4e4f4]  border-none  rounded-md outline-none resize-none"
-            rows={2}
-            placeholder='What problem does your Idea solve?'
-          />
-        </div>
-
-        
-        <button
-          type="submit"
-          className="py-2 px-4 border-2 border-black rounded-md bg-white text-black font-medium hover:bg-black hover:text-white transition-all duration-200"
-        >
-          Post Idea
-        </button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-4">Upload Your Idea</h2>
+        <form onSubmit={handleSubmit} encType='multipart/form-data'>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={ideasData.title}
+              onChange={handleInputChange}
+              className="mt-1 p-2 border rounded w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              name="description"
+              value={ideasData.description}
+              onChange={handleInputChange}
+              rows={4}
+              className="mt-1 p-2 border rounded w-full"
+            />
+          </div>
+          
+          
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Problem Statement</label>
+            <textarea
+              name="problem_statement"
+              value={ideasData.problem_statement}
+              onChange={handleInputChange}
+              rows={4}
+              className="mt-1 p-2 border rounded w-full"
+            />
+          </div>
+          
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+      <ToastContainer />
     </div>
-    
   );
 };
 
-export default Idea;
+export default UploadProjectForm;

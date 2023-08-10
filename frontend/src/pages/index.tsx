@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddButton from '@/components/AddBtn';
 import Search from './search';
 import { useState } from 'react';
+import { useAuth } from '@/components/authContext';
+import ProjectList from '@/components/Feed';
 
 const Home = () => {
-  const isUserLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
+
+  useEffect(() => {
+    console.log('userLoggedIn:', isLoggedIn);
+  }, []);
   return (
     <section className='w-full flex justify-center items-center flex-col'>
       <h1 className='mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl text-center'>
@@ -18,8 +24,12 @@ const Home = () => {
       <p className='mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl text-center'>
         Think.Devs is a platform for the world to discover, create, and share creative and innovative ideas.
       </p>
-
+      { isLoggedIn ?
+        (<AddButton />) : 
+        (<> </>)
+      }
       <Search />
+      <ProjectList />
     </section>
   );
 };

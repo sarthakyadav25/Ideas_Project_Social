@@ -187,7 +187,6 @@ class UploadProjectPostApi(APIView):
 
     def post(self,request):
         try:
-            type = request.data['type']
             post_serializer = ProjectPostSerializer(data=request.data)
             if post_serializer.is_valid():
                 user  = request.user
@@ -232,7 +231,6 @@ class UploadIdeaPostApi(APIView):
 
     def post(self,request):
         try:
-            type = request.data['type']
             post_serializer = IdeaPostSerializer(data=request.data)
             if post_serializer.is_valid():
                 user  = request.user
@@ -271,7 +269,6 @@ class UploadIdeaPostApi(APIView):
                 'message':str(e),
             })
         
-        
 
 class GetUserPostApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
@@ -302,7 +299,7 @@ class GetAllPostApi(APIView):
             return Response({
                 'message':str(e),
             })
-    
+
 
         
     

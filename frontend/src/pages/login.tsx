@@ -43,8 +43,8 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         toast.error(`${data.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
@@ -55,6 +55,8 @@ const Login = () => {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
         });
+        const jwtToken = data.access;
+        localStorage.setItem('access_token', jwtToken);
         // Store the JWT token in cookies
 
           router.push('/');

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddButton from '@/components/AddBtn'
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -11,23 +11,26 @@ const Navbar: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
-
   // TODO: Implement the useEffect to check the user's login status
   
-
-
+  
+  
+  
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/logout', {
         method: 'GET',
         credentials: 'include',
       });
+      
 
+  
       if (response.ok) {
         setIsLoggedIn(false);
         toast.success('Logged Out!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
+          
         });
         setTimeout(() => {
           router.push('/');
@@ -72,7 +75,6 @@ const Navbar: React.FC = () => {
                 className='rounded-full cursor-pointer  flex justify-center items-center'
               />
             </Link>
-           <AddButton />
           </div>
 
         );
@@ -86,7 +88,6 @@ const Navbar: React.FC = () => {
         alt='Profile Image'
         onClick={() => setToggleDropdown((prev) => !prev)}
       />
-          <AddButton />
       
       {toggleDropdown && (
         <div className='absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end,shadow-md'>
@@ -145,7 +146,7 @@ const Navbar: React.FC = () => {
       )
     }
   return (
-    <nav className='flex  justify-between items-start w-full mb-5 pt-3'>
+    <nav className='flex justify-between items-start w-full mb-5 pt-3 sticky top-0 backdrop-blur-sm border-b-2 border-black z-20'>
       <Link href='/' className='flex gap-2 flex-center'>
         <span className='text-2xl font-bold'>
           Think.<span className='text-[#d61e92]'>Devs</span>
