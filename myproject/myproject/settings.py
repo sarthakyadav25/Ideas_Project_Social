@@ -212,9 +212,9 @@ AUTHENTICATION_BACKENDS = [
 # Setup allauth parameters
 SITE_ID = 2
 # LOGIN_REDIRECT_URL :- destination of login page in your urls.py
-LOGIN_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_LOGOUT_REDIRECT :- where to redirect when user logout
-ACCOUNT_LOGOUT_REDIRECT = 'logout'
+ACCOUNT_LOGOUT_REDIRECT = '/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
