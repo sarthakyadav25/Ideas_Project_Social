@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User,auth
-from .serializers import ProfileSerializer,LoginSerializer,ProjectPostSerializer,SendPostSerializer,SendProfileSerializer,IdeaPostSerializer
+from .serializers import ProfileSerializer,LoginSerializer,ProjectPostSerializer,SendPostSerializer,SendProfileSerializer,IdeaPostSerializer,SavedPostSerializer
 from rest_framework import generics,status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -359,6 +359,68 @@ class LikePostApi(APIView):
             return Response({
                 "error":str(e),
             })
+
+class SendSavedPostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        try:
+            user = request.user
+            user_saved_posts = SavedPost.objects.filter(username = user.username)
+            saved_posts_serializer = SavedPostSerializer(user_saved_posts,many=True)
+            return Response(saved_posts_serializer.data)
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+        
+class EditPostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request,post_id):
+        try:
+            post_object = Post.objects.get(id=post_id)
+            post_object.title = request.data['title']
+            post_object.description = request.data['description']
+            post_object.problem_statement = request.data['problem_statement']
+            post_object.tech_stack = request.data['tech_stack']
+            post_object.project_link_live = request.data['project_link_live']
+            post_object.project_link_github = request.data['project_link_github']
+            post_pic = request.FILES['post_pic']
+            if not is_image_file(post_pic.name):
+                return Response({
+                    'error':"Please choose an image file"
+                })
+            else:
+                post_object.post_pic = post_pic
+                post_object.save()
+                return Response({
+                    "message":"Post edited successfully"
+                })
+        except Exception as e:
+            return Response({
+                "error":str(e),
+            })
+        
+class DeletePostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            post_object = Post.objects.get(id=post_id)
+            post_object.delete()
+            return Response({
+                "message": "Post deleted successfully"
+            })
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+
+
 
 
 

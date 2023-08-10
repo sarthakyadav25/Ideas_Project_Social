@@ -14,5 +14,8 @@ urlpatterns = [
     path('userposts',views.GetUserPostApi.as_view(),name='userposts'),
     path('allposts',views.GetAllPostApi.as_view(),name='allposts'),
     path('like_post/<str:post_id>',views.LikePostApi.as_view(),name='like_post'),
+    path('get_saved_posts',views.SendSavedPostApi.as_view(),name='get_saved_posts'),
+    path('delete_post/<str:post_id>',views.DeletePostApi.as_view(),name='delete_post'),
+    path('edit_post/<str:post_id>',views.EditPostApi.as_view(),name='edit_post'),
     path('save_post/<str:post_id>',views.SavePostApi.as_view(),name='save_post'),
 ]
