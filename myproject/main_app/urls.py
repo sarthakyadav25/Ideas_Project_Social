@@ -13,4 +13,6 @@ urlpatterns = [
     path('post_idea',views.UploadIdeaPostApi.as_view(),name='post_idea'),
     path('userposts',views.GetUserPostApi.as_view(),name='userposts'),
     path('allposts',views.GetAllPostApi.as_view(),name='allposts'),
+    path('like_post/<str:post_id>',views.LikePostApi.as_view(),name='like_post'),
+    path('save_post/<str:post_id>',views.SavePostApi.as_view(),name='save_post'),
 ]

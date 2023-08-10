@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.middleware import csrf
 from .authenticate import CustomAuthentication
-from .models import Profile,Post
+from .models import Profile,Post,SavedPost,LikedPost
 from rest_framework_simplejwt.backends import TokenBackend
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -187,7 +187,6 @@ class UploadProjectPostApi(APIView):
 
     def post(self,request):
         try:
-            # type = request.data['type']
             post_serializer = ProjectPostSerializer(data=request.data)
             if post_serializer.is_valid():
                 user  = request.user
@@ -213,6 +212,8 @@ class UploadProjectPostApi(APIView):
                 except:
                     image_file = None
                 post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
+                post_object.username = request.user.username
+                post_object.type = "Project"
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -232,7 +233,6 @@ class UploadIdeaPostApi(APIView):
 
     def post(self,request):
         try:
-            # type = request.data['type']
             post_serializer = IdeaPostSerializer(data=request.data)
             if post_serializer.is_valid():
                 user  = request.user
@@ -258,6 +258,8 @@ class UploadIdeaPostApi(APIView):
                 except:
                     image_file = None
                 post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
+                post_object.username = request.user.username
+                post_object.type = "Idea"
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -303,6 +305,62 @@ class GetAllPostApi(APIView):
                 'message':str(e),
             })
         
+class SavePostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            user = request.user
+            if SavedPost.objects.filter(username=user.username,post_id=post_id).exists():
+                saved_post_object = SavedPost.objects.get(username=user.username,post_id=post_id)
+                saved_post_object.delete()
+                return Response({
+                    'message':"Saved post removed"
+                },status=status.HTTP_200_OK)
+            else:
+                saved_post_object = SavedPost.objects.create(username=user.username,post_id=post_id)
+                saved_post_object.save()
+                return Response({
+                    "message":"Post saved successfully"
+                },status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+        
+class LikePostApi(APIView):
+
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            user = request.user
+            if LikedPost.objects.filter(username=user.username,post_id=post_id).exists():
+                like_post_object = LikedPost.objects.get(username=user.username,post_id=post_id)
+                post_object = Post.objects.get(id=post_id)
+                post_object.no_of_likes -= 1
+                like_post_object.delete()
+                post_object.save()
+                return Response({
+                    'message':"Unliked the post"
+                },status=status.HTTP_200_OK)
+            else:
+                like_post_object = LikedPost.objects.create(username=user.username,post_id=post_id)
+                post_object = Post.objects.get(id=post_id)
+                post_object.no_of_likes += 1
+                like_post_object.save()
+                post_object.save()
+                return Response({
+                    'message':"Post liked successfully"
+                },status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                "error":str(e),
+            })
+
+
 
 
         

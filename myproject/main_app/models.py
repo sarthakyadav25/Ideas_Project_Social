@@ -20,6 +20,7 @@ class Profile(models.Model):
 class Post(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    username = models.CharField(max_length=100,default="GuestUser")
     post_pic = models.ImageField(upload_to='post_pics')
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -43,6 +44,9 @@ class LikedPost(models.Model):
 class SavedPost(models.Model):
     username=  models.CharField(max_length=100)
     post_id = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
 
 
 
