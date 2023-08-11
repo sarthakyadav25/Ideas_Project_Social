@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User,auth
-from .serializers import ProfileSerializer,LoginSerializer,ProjectPostSerializer,SendPostSerializer,SendProfileSerializer,IdeaPostSerializer
+from .serializers import ProfileSerializer,LoginSerializer,ProjectPostSerializer,SendPostSerializer,SendProfileSerializer,IdeaPostSerializer,SavedPostSerializer
 from rest_framework import generics,status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.middleware import csrf
 from .authenticate import CustomAuthentication
-from .models import Profile,Post
+from .models import Profile,Post,SavedPost,LikedPost
 from rest_framework_simplejwt.backends import TokenBackend
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -212,6 +212,8 @@ class UploadProjectPostApi(APIView):
                 except:
                     image_file = None
                 post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
+                post_object.username = request.user.username
+                post_object.type = "Project"
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -256,6 +258,8 @@ class UploadIdeaPostApi(APIView):
                 except:
                     image_file = None
                 post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
+                post_object.username = request.user.username
+                post_object.type = "Idea"
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -299,7 +303,137 @@ class GetAllPostApi(APIView):
             return Response({
                 'message':str(e),
             })
+<<<<<<< HEAD
             
+=======
+        
+class SavePostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            user = request.user
+            if SavedPost.objects.filter(username=user.username,post_id=post_id).exists():
+                saved_post_object = SavedPost.objects.get(username=user.username,post_id=post_id)
+                saved_post_object.delete()
+                return Response({
+                    'message':"Saved post removed"
+                },status=status.HTTP_200_OK)
+            else:
+                saved_post_object = SavedPost.objects.create(username=user.username,post_id=post_id)
+                saved_post_object.save()
+                return Response({
+                    "message":"Post saved successfully"
+                },status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+        
+class LikePostApi(APIView):
+
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            user = request.user
+            if LikedPost.objects.filter(username=user.username,post_id=post_id).exists():
+                like_post_object = LikedPost.objects.get(username=user.username,post_id=post_id)
+                post_object = Post.objects.get(id=post_id)
+                post_object.no_of_likes -= 1
+                like_post_object.delete()
+                post_object.save()
+                return Response({
+                    'message':"Unliked the post"
+                },status=status.HTTP_200_OK)
+            else:
+                like_post_object = LikedPost.objects.create(username=user.username,post_id=post_id)
+                post_object = Post.objects.get(id=post_id)
+                post_object.no_of_likes += 1
+                like_post_object.save()
+                post_object.save()
+                return Response({
+                    'message':"Post liked successfully"
+                },status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                "error":str(e),
+            })
+
+class SendSavedPostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        try:
+            user = request.user
+            user_saved_posts = SavedPost.objects.filter(username = user.username)
+            saved_posts_serializer = SavedPostSerializer(user_saved_posts,many=True)
+            return Response(saved_posts_serializer.data)
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+        
+class EditPostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request,post_id):
+        try:
+            post_object = Post.objects.get(id=post_id)
+            post_object.title = request.data['title']
+            post_object.description = request.data['description']
+            post_object.problem_statement = request.data['problem_statement']
+            post_object.tech_stack = request.data['tech_stack']
+            post_object.project_link_live = request.data['project_link_live']
+            post_object.project_link_github = request.data['project_link_github']
+            post_pic = request.FILES['post_pic']
+            if not is_image_file(post_pic.name):
+                return Response({
+                    'error':"Please choose an image file"
+                })
+            else:
+                post_object.post_pic = post_pic
+                post_object.save()
+                return Response({
+                    "message":"Post edited successfully"
+                })
+        except Exception as e:
+            return Response({
+                "error":str(e),
+            })
+        
+class DeletePostApi(APIView):
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,post_id):
+        try:
+            post_object = Post.objects.get(id=post_id)
+            post_object.delete()
+            return Response({
+                "message": "Post deleted successfully"
+            })
+        except Exception as e:
+            return Response({
+                'error':str(e),
+            })
+
+
+
+
+
+
+        
+    
+
+
+
+
+>>>>>>> 9440bfb584388c6ee743d48139b93887daca166f
 class ReturnDataApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
     permission_classes = [IsAuthenticated]
