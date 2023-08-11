@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+import FeedSelector from './FeedSelector';
+import ProjectCard from './ProjectCard';
+import { FaSearch } from 'react-icons/fa';
 
 interface Post {
   id: number;
@@ -9,11 +14,24 @@ interface Post {
   project_link_live: string;
   problem_statement: string;
   post_pic: string | null;
+  user: {
+    username: string;
+    profile_photo: string | null;
+  };
+  type: string;
 }
+
+type FeedType = 'projects' | 'ideas';
+
+const numPostsToLoad = 6; // Number of posts to load on each "Load More" click
 
 const ProjectList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-
+  const [filterText, setFilterText] = useState('');
+  const [selectedFeed, setSelectedFeed] = useState<FeedType>('projects');
+  const [numPostsToShow, setNumPostsToShow] = useState(numPostsToLoad);
+  const [expandedStates, setExpandedStates] = useState<boolean[]>([]);
+  const router = useRouter();
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -30,6 +48,7 @@ const ProjectList: React.FC = () => {
 
       if (response.ok) {
         setPosts(data);
+        setExpandedStates(data.map(() => false)); // Initialize all as collapsed
       } else {
         console.error(data.message);
       }
@@ -38,34 +57,81 @@ const ProjectList: React.FC = () => {
     }
   };
 
+  const handleToggleExpand = (index: number) => {
+    const newExpandedStates = expandedStates.map((state, i) => (i === index ? !state : false));
+    setExpandedStates(newExpandedStates);
+  };
+
+  const totalPosts = posts.length;
+
+  const handleLoadMore = () => {
+    const isLoggedIn = localStorage.getItem('access_token') !== null;
+
+    if (isLoggedIn) {
+      const newNumPostsToShow = numPostsToShow + numPostsToLoad;
+      setNumPostsToShow(newNumPostsToShow);
+
+      if (newNumPostsToShow <= totalPosts) {
+        setPosts(posts.slice(0, newNumPostsToShow));
+      }
+    } else {
+      router.push('/login');
+    }
+  };
+
+  const filteredPosts = posts.filter((post) => {
+    if (!filterText) {
+      return true; // Show all posts if filterText is empty
+    }
+
+    const lowerCaseFilter = filterText.toLowerCase();
+    const searchTermInPost =
+      post.title.toLowerCase().includes(lowerCaseFilter) ||
+      post.tech_stack.toLowerCase().includes(lowerCaseFilter) ||
+      post.description.toLowerCase().includes(lowerCaseFilter) ||
+      post.problem_statement.toLowerCase().includes(lowerCaseFilter);
+
+    return searchTermInPost;
+  });
+
+  const visiblePosts = filteredPosts.slice(0, numPostsToShow);
+
   return (
-    <div className="bg-none min-h-screen p-8 flex justify-center items-center flex-col   max-w-full">
-      <h2 className="text-2xl font-semibold mb-4">Project List</h2>
-      <ul className='flex flex-wrap gap-5'>
-        {posts.map((post) => (
-          <li key={post.id} className="bg-white shadow-md rounded-lg p-4 mb-4 w-1/3 truncate">
-            <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-            {post.post_pic ? (
-              <img
-              src={`http://localhost:8000${post.post_pic}`}
-              alt=""
-              className=" relative w-full object-cover mt-4"
-              />
-              ) : (
-                <span className="text-gray-500 mt-4">No Picture</span>
-                )}
-            <p className="text-gray-600 mb-2 ">{post.description}</p>
-            <p className="mb-4 ">{post.problem_statement}</p>
-            <p className="text-gray-500 mb-2">Tech Stack: {post.tech_stack}</p>
-            <p className="text-blue-500 mb-2">
-              GitHub Link: <a href={post.project_link_github}>{post.project_link_github}</a>
-            </p>
-            <p className="text-blue-500 mb-2">
-              Live Link: <a href={post.project_link_live}>{post.project_link_live}</a>
-            </p>
-          </li>
-        ))}
-      </ul>
+    <div className="bg-none min-h-screen p-8 flex justify-start items-center  flex-col gap-5 max-w-full">
+      <FeedSelector selectedFeed={selectedFeed} onSelectFeed={setSelectedFeed} />
+      <div className="relative flex items-center justify-center">
+        <input
+          type="text"
+          placeholder="Ex: React, Python etc."
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          required
+          className="md:w-[600px] block w-full rounded-md border border-gray-200 bg-white py-2.5 font-satoshi pl-12 pr-12 text-sm shadow-lg font-medium focus:border-black focus:outline-none focus:ring-0"
+        />
+        <div className="absolute left-3 ">
+          <FaSearch className="text-gray-400" />
+        </div>
+      </div>
+      <div className="grid gap-5 md:grid-cols-1">
+        {visiblePosts.length > 0 ? (
+          visiblePosts.map((post, index) => (
+            <ProjectCard
+              key={post.id}
+              project={post}
+            />
+          ))
+        ) : (
+          <p className="text-center text-gray-500 mt-4">No matching innovations found.</p>
+        )}
+        {numPostsToShow < totalPosts && (
+          <button
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            onClick={handleLoadMore}
+          >
+            Load More
+          </button>
+        )}
+      </div>
     </div>
   );
 };

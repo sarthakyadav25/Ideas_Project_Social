@@ -13,7 +13,7 @@ const Home = () => {
     console.log('userLoggedIn:', isLoggedIn);
   }, []);
   return (
-    <section className='w-full flex justify-center items-center flex-col'>
+    <section className='w-full flex justify-center items-center flex-col min-h-screen'>
       <h1 className='mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl text-center'>
         Innovate & Share
         <br className='max-md:hidden' />
@@ -28,7 +28,6 @@ const Home = () => {
         (<AddButton />) : 
         (<> </>)
       }
-      <Search />
       <ProjectList />
     </section>
   );

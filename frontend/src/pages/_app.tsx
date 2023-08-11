@@ -25,19 +25,19 @@ const App = ({ Component, pageProps }: AppProps) => {
       <div className='main'>
         <div className='gradient' />
       </div>
-      <div className='px-5 min-w-[100vw] min-h-[100vh] '>
+      <div className=' min-w-[100vw] min-h-[100vh] '>
         <Head>
           <title>{metadata.title}</title>
           <meta name='description' content={metadata.description} />
         </Head>
-        <div className='app'>
       <AuthProvider>
           < Navbar />
+        <div className='app'>
           <Component {...pageProps} />
           {/* </> */}
-          <ToastContainer />
-    </AuthProvider>
         </div>
+    </AuthProvider>
+          <ToastContainer />
       </div>
     </div>
   );

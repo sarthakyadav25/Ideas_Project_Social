@@ -27,6 +27,7 @@ const Navbar: React.FC = () => {
   
       if (response.ok) {
         setIsLoggedIn(false);
+        localStorage.removeItem('access_token') !== null;
         toast.success('Logged Out!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
@@ -45,7 +46,6 @@ const Navbar: React.FC = () => {
     }
   };
 
-  
   var menu ,menuSm;
   if(isLoggedIn) {
     menu = (
@@ -146,7 +146,7 @@ const Navbar: React.FC = () => {
       )
     }
   return (
-    <nav className='flex justify-between items-start w-full mb-5 pt-3 sticky top-0 backdrop-blur-sm border-b-2 border-black z-20'>
+    <nav className='flex justify-between items-start w-full mb-5 pt-3 pl-10 pr-10 sticky top-0 backdrop-blur-sm border-b-2 border-black z-20'>
       <Link href='/' className='flex gap-2 flex-center'>
         <span className='text-2xl font-bold'>
           Think.<span className='text-[#d61e92]'>Devs</span>
@@ -158,7 +158,7 @@ const Navbar: React.FC = () => {
            {menu}
       </div>
       {/* Mobile Navigation */}
-      <div className='sm:hidden flex relative'>
+      <div className='sm:hidden flex relative pb-3'>
            {menuSm}
 
       </div>
