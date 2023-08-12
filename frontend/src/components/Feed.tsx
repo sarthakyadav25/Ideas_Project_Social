@@ -45,9 +45,6 @@ const ProjectList: React.FC = () => {
   const fetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/allposts', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
       });
 
       const data = await response.json();
