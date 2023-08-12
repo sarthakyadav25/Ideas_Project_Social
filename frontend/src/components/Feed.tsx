@@ -15,11 +15,21 @@ interface Post {
   project_link_live: string;
   problem_statement: string;
   post_pic: string | null;
-  user: {
     username: string;
     profile_photo: string | null;
-  };
+
   type: string;
+}
+interface User {
+  username: string;
+  id: number;
+    bio: string;
+    email: string;
+    interested_tech_stacks: string; 
+    cover_pic: string | null;
+    profile_pic: string | null;
+    user: number;
+
 }
 
 type FeedType = 'projects' | 'ideas';
@@ -36,6 +46,7 @@ const ProjectList: React.FC = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+
   const { isLoggedIn } = useAuth();
 
 
@@ -61,26 +72,26 @@ const ProjectList: React.FC = () => {
   };
 
 
+  
+  
   const totalPosts = posts.length;
 
   const handleLoadMore = () => {
-    if (isLoggedIn) {
+    
       const newNumPostsToShow = numPostsToShow + numPostsToLoad;
       setNumPostsToShow(newNumPostsToShow);
 
       if (newNumPostsToShow <= totalPosts) {
         setPosts(posts.slice(0, newNumPostsToShow));
-      }
-    } else {
-      router.push('/login');
-    }
+
+    } 
   };
 
   const filteredPosts = posts.filter((post) => {
     if (!filterText  ) {
       return true; // Show all posts if filterText is empty
     }
-    if(isLoggedIn){
+
     const lowerCaseFilter = filterText.toLowerCase();
     const searchTermInPost =
       post.title.toLowerCase().includes(lowerCaseFilter) ||
@@ -89,9 +100,7 @@ const ProjectList: React.FC = () => {
       post.problem_statement.toLowerCase().includes(lowerCaseFilter);
 
     return searchTermInPost;
-    }else{
-      router.push('/login');
-    }
+    
   });
 
   const visiblePosts = filteredPosts.slice(0, numPostsToShow);
@@ -114,7 +123,7 @@ const ProjectList: React.FC = () => {
       </div>
       <div className="grid gap-5 md:grid-cols-1">
         {visiblePosts.length > 0 ? (
-          visiblePosts.map((post, index) => (
+          visiblePosts.map((post, index,) => (
             <ProjectCard
               key={post.id}
               project={post}
@@ -123,7 +132,7 @@ const ProjectList: React.FC = () => {
         ) : (
           <p className="text-center text-gray-500 mt-4 ">No matching innovations found.</p>
         )}
-        {numPostsToShow < totalPosts && (
+        {numPostsToShow < totalPosts &&  (
           <button
             className="mt-4 bg-[#ff00ff] w-[200px] text-white py-2 px-4 rounded-md hover:bg-white hover:text-[#ff00ff] border border-[#ff00ff] transition duration-300 ease-in-out block m-auto"
             onClick={handleLoadMore}
