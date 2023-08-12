@@ -273,7 +273,6 @@ class UploadIdeaPostApi(APIView):
                 'message':str(e),
             })
         
-        
 
 class GetUserPostApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
@@ -304,6 +303,7 @@ class GetAllPostApi(APIView):
             return Response({
                 'message':str(e),
             })
+
         
 class SavePostApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
@@ -420,21 +420,9 @@ class DeletePostApi(APIView):
                 'error':str(e),
             })
 
-
-
-
-
-
-        
-    
-
-
-
-
 class ReturnDataApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
     permission_classes = [IsAuthenticated]
-
     def get(self,request):
         try:
             return Response({
@@ -446,5 +434,3 @@ class ReturnDataApi(APIView):
                 'status':404,
                 'message':'error'
             })
-
-

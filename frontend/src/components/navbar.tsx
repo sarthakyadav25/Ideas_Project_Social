@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddButton from '@/components/AddBtn'
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -11,10 +11,33 @@ const Navbar: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
+  const [username, setUsername] = useState('');
 
-  // TODO: Implement the useEffect to check the user's login status
-  
+  const userProfile = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/profile', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
 
+        },
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        const username = data.username;
+        setUsername(username); // Update the state with the username
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching projects');
+    }
+  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      userProfile();
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -23,11 +46,13 @@ const Navbar: React.FC = () => {
         credentials: 'include',
       });
 
+  
       if (response.ok) {
         setIsLoggedIn(false);
         toast.success('Logged Out!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
+          
         });
         setTimeout(() => {
           router.push('/');
@@ -42,12 +67,14 @@ const Navbar: React.FC = () => {
     }
   };
 
-  
   var menu ,menuSm;
   if(isLoggedIn) {
     menu = (
       
       <div className='flex gap-3 md:gap-5'>
+        {username && (
+          <p className="text-black- text-sm mt-2">Welcome, {username}</p>
+        )}
             <Link
               href='/Saved'
               className='rounded-full relative inline-flex items-center justify-center px-5 py-2.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white'
@@ -63,7 +90,7 @@ const Navbar: React.FC = () => {
               </span>
             </button>
                 
-            <Link href='/profile' className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-black'>
+            <Link href='/'  onClick={userProfile} className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-black'>
               <img
                 src='next.svg'
                 width={37}
@@ -72,7 +99,6 @@ const Navbar: React.FC = () => {
                 className='rounded-full cursor-pointer  flex justify-center items-center'
               />
             </Link>
-           <AddButton />
           </div>
 
         );
@@ -86,7 +112,6 @@ const Navbar: React.FC = () => {
         alt='Profile Image'
         onClick={() => setToggleDropdown((prev) => !prev)}
       />
-          <AddButton />
       
       {toggleDropdown && (
         <div className='absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end,shadow-md'>
@@ -145,7 +170,7 @@ const Navbar: React.FC = () => {
       )
     }
   return (
-    <nav className='flex  justify-between items-start w-full mb-5 pt-3'>
+    <nav className='flex justify-between items-start w-full mb-5 pt-3 pl-10 pr-10 sticky top-0 backdrop-blur-sm border-b-2 border-black z-20'>
       <Link href='/' className='flex gap-2 flex-center'>
         <span className='text-2xl font-bold'>
           Think.<span className='text-[#d61e92]'>Devs</span>
@@ -157,7 +182,7 @@ const Navbar: React.FC = () => {
            {menu}
       </div>
       {/* Mobile Navigation */}
-      <div className='sm:hidden flex relative'>
+      <div className='sm:hidden flex relative pb-3'>
            {menuSm}
 
       </div>
