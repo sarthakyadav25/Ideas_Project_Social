@@ -11,23 +11,44 @@ const Navbar: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
-  // TODO: Implement the useEffect to check the user's login status
-  
-  
-  
-  
+  const [username, setUsername] = useState('');
+
+  const userProfile = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/profile', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+
+        },
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        const username = data.username;
+        setUsername(username); // Update the state with the username
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching projects');
+    }
+  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      userProfile();
+    }
+  }, []);
+
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/logout', {
         method: 'GET',
         credentials: 'include',
       });
-      
 
   
       if (response.ok) {
         setIsLoggedIn(false);
-        localStorage.removeItem('access_token') !== null;
         toast.success('Logged Out!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
@@ -51,6 +72,9 @@ const Navbar: React.FC = () => {
     menu = (
       
       <div className='flex gap-3 md:gap-5'>
+        {username && (
+          <p className="text-black- text-sm mt-2">Welcome, {username}</p>
+        )}
             <Link
               href='/Saved'
               className='rounded-full relative inline-flex items-center justify-center px-5 py-2.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white'
@@ -66,7 +90,7 @@ const Navbar: React.FC = () => {
               </span>
             </button>
                 
-            <Link href='/profile' className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-black'>
+            <Link href='/'  onClick={userProfile} className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-black'>
               <img
                 src='next.svg'
                 width={37}

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import FeedSelector from './FeedSelector';
 import ProjectCard from './ProjectCard';
 import { FaSearch } from 'react-icons/fa';
+import { useAuth } from './authContext';
 
 interface Post {
   id: number;
@@ -35,7 +36,12 @@ const ProjectList: React.FC = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+  const { isLoggedIn } = useAuth();
 
+
+  useEffect(() => {
+    console.log('userLoggedIn:', isLoggedIn);
+  }, []);
   const fetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/allposts', {
@@ -57,16 +63,10 @@ const ProjectList: React.FC = () => {
     }
   };
 
-  const handleToggleExpand = (index: number) => {
-    const newExpandedStates = expandedStates.map((state, i) => (i === index ? !state : false));
-    setExpandedStates(newExpandedStates);
-  };
 
   const totalPosts = posts.length;
 
   const handleLoadMore = () => {
-    const isLoggedIn = localStorage.getItem('access_token') !== null;
-
     if (isLoggedIn) {
       const newNumPostsToShow = numPostsToShow + numPostsToLoad;
       setNumPostsToShow(newNumPostsToShow);
@@ -80,10 +80,10 @@ const ProjectList: React.FC = () => {
   };
 
   const filteredPosts = posts.filter((post) => {
-    if (!filterText) {
+    if (!filterText  ) {
       return true; // Show all posts if filterText is empty
     }
-
+    if(isLoggedIn){
     const lowerCaseFilter = filterText.toLowerCase();
     const searchTermInPost =
       post.title.toLowerCase().includes(lowerCaseFilter) ||
@@ -92,6 +92,9 @@ const ProjectList: React.FC = () => {
       post.problem_statement.toLowerCase().includes(lowerCaseFilter);
 
     return searchTermInPost;
+    }else{
+      router.push('/login');
+    }
   });
 
   const visiblePosts = filteredPosts.slice(0, numPostsToShow);
@@ -121,11 +124,11 @@ const ProjectList: React.FC = () => {
             />
           ))
         ) : (
-          <p className="text-center text-gray-500 mt-4">No matching innovations found.</p>
+          <p className="text-center text-gray-500 mt-4 ">No matching innovations found.</p>
         )}
         {numPostsToShow < totalPosts && (
           <button
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            className="mt-4 bg-[#ff00ff] w-[200px] text-white py-2 px-4 rounded-md hover:bg-white hover:text-[#ff00ff] border border-[#ff00ff] transition duration-300 ease-in-out block m-auto"
             onClick={handleLoadMore}
           >
             Load More

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUser, FaGithub, FaLink, FaArrowUp } from 'react-icons/fa';
+import { FaUser, FaGithub, FaLink, FaBookmark, FaHeart } from 'react-icons/fa';
 
 interface ProjectCardProps {
   project: Post;
@@ -22,6 +22,25 @@ interface Post {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [expanded, setExpanded] = useState(false);
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/profile/', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+         // Initialize all as collapsed
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching projects');
+    }
+  };
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -40,6 +59,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           ) : (
             <FaUser className="w-4 h-4 text-gray" />
           )}
+          <FaBookmark className="w-4 h-4 text-gray" />
+          <FaHeart className="w-4 h-4 text-gray" />
         </div>
       </div>
       <div className="relative">
@@ -54,7 +75,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className={`h-20 ${expanded ? 'from-[#00bfff] to-black' : 'from-[#ff00ff] to-white'} absolute bottom-0 left-0 right-0`} />
       </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
+        <h3 className="text-[26px]  font-bold mb-2">{project.title}</h3>
         <div className={`mb-2 ${expanded ? '' : 'line-clamp-1'}`}>
           <p className="text-gray-600">{project.description}</p>
         </div>
@@ -90,7 +111,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 </span>
               ))}
             </div>
-            <p className="mt-2 text-white-600">{project.problem_statement}</p>
+            <h4 className="mt-3 text-black font-semibold">Problem Statement</h4>
+            <p className="mt-1 text-white-600">{project.problem_statement}</p>
           </div>
         )}
         <button

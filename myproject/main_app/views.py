@@ -303,9 +303,7 @@ class GetAllPostApi(APIView):
             return Response({
                 'message':str(e),
             })
-<<<<<<< HEAD
-            
-=======
+
         
 class SavePostApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
@@ -422,18 +420,6 @@ class DeletePostApi(APIView):
                 'error':str(e),
             })
 
-
-
-
-
-
-        
-    
-
-
-
-
->>>>>>> 9440bfb584388c6ee743d48139b93887daca166f
 class ReturnDataApi(APIView):
     authentication_classes = [JWTAuthentication,CustomAuthentication]
     permission_classes = [IsAuthenticated]
