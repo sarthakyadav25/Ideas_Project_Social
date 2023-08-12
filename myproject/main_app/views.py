@@ -211,9 +211,7 @@ class UploadProjectPostApi(APIView):
                         },status=status.HTTP_400_BAD_REQUEST)
                 except:
                     image_file = None
-                post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
-                post_object.username = request.user.username
-                post_object.type = "Project"
+                post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link,username=request.user.username)
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -257,9 +255,7 @@ class UploadIdeaPostApi(APIView):
                         },status=status.HTTP_400_BAD_REQUEST)
                 except:
                     image_file = None
-                post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link)
-                post_object.username = request.user.username
-                post_object.type = "Idea"
+                post_object = Post.objects.create(user=user,post_pic = image_file,title = title,description=description,problem_statement=problem_statement,tech_stack=tech_stack,project_link_github = github_link,project_link_live = live_link,username=request.user.username,type="Idea")
                 post_object.save()
                 return Response({
                     'message':'data saved successfully'
@@ -290,8 +286,6 @@ class GetUserPostApi(APIView):
             })
 
 class GetAllPostApi(APIView):
-    authentication_classes = [JWTAuthentication,CustomAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get(self,request):
         try:
