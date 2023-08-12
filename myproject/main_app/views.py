@@ -272,6 +272,7 @@ class UploadIdeaPostApi(APIView):
             return Response({
                 'message':str(e),
             })
+
         
 
 class GetUserPostApi(APIView):
