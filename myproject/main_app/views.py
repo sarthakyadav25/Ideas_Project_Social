@@ -182,8 +182,8 @@ class ProfileApi(APIView):
             })
         
 class GetUserProfileApi(APIView):
-    # authentication_classes = [JWTAuthentication,CustomAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication,CustomAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self,request,pk):
         try:
