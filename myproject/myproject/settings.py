@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-a=j5wmd4@&12$n48_gtsvh3^h4_dc=jy$7hm$z+8ayvnmluskf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['thinkdevs.onrender.com', 'www.thinkdevs.onrender.com']
 
 
 # Application definition
