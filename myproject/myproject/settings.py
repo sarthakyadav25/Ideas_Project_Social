@@ -212,7 +212,7 @@ AUTHENTICATION_BACKENDS = [
 # Setup allauth parameters
 SITE_ID = 2
 # LOGIN_REDIRECT_URL :- destination of login page in your urls.py
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:3000/login'
 # ACCOUNT_LOGOUT_REDIRECT :- where to redirect when user logout
 ACCOUNT_LOGOUT_REDIRECT = '/'
 
