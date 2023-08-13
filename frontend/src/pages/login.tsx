@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import  {useAuth}  from '@/components/authContext';
-
+import Cookies from 'js-cookie';
 interface Errors {
   username?: string;
   password?: string;
@@ -42,24 +42,24 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-
-      const data = await response.json();
+    
+      const responseData = await response.json(); // Parse the response data
       if (!response.ok) {
-        toast.error(`${data.message}`, {
+        toast.error(`${responseData.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
       } else {
-        setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
+        setIsLoggedIn(true);
         toast.success('Login successful!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
         });
-        const jwtToken = data.access;
-        localStorage.setItem('access_token', jwtToken);
-        // Store the JWT token in cookies
-
-          router.push('/');
+    
+        const jwtToken = responseData.access; // Get the JWT token from the response data
+        Cookies.set('access_token', jwtToken);
+        document.cookie = `access_token=${jwtToken}; path=/; secure=true; samesite=lax`;
+        router.push('/');
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
@@ -71,8 +71,7 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-md min-w-[20rem] w-[25rem] sm:w-[full] max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-#f461a8">Login</h2>
         <div className="space-y-4">
-        
-
+      
           {/* Login with Custom Fields */}
           <form className="space-y-4" onSubmit={handleSubmit} method="post">
             {/* Email Field */}

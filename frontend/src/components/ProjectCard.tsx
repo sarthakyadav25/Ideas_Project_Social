@@ -62,7 +62,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   useEffect(() => {
     async function fetchUserProfile() {
       try {
-        const response = await fetch('https://thinkdevs.onrender.com/api/profile', {
+        const response = await fetch('https://thinkdevs.onrender.com/profile', {
           method: 'GET',
           headers: {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -104,7 +104,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const fetchSavedPosts = async () => {
     try {
       const response = await fetch(
-        `https://thinkdevs.onrender.com/api/get_saved_posts`, // Adjust the API endpoint as needed
+        `https://thinkdevs.onrender.com/get_saved_posts`, // Adjust the API endpoint as needed
         {
           method: 'GET',
           headers: {
@@ -137,7 +137,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
       
       // Call the like post API and handle the response
-      const response = await fetch(`https://thinkdevs.onrender.com/api/like_post/${project.id}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/like_post/${project.id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -171,7 +171,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
 
       const response = await fetch(
-        `https://thinkdevs.onrender.com/api/save_post/${project.id}`,
+        `https://thinkdevs.onrender.com/save_post/${project.id}`,
         {
           method: 'GET',
           headers: {
@@ -196,7 +196,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`https://thinkdevs.onrender.com/api/delete_post/${project.id}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/delete_post/${project.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },

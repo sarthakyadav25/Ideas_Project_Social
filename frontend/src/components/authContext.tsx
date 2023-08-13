@@ -25,24 +25,27 @@ export const AuthProvider = ({ children }: Props) => {
       try {
         const response = await fetch('https://thinkdevs.onrender.com/api/check', {
           method: 'GET',
-          credentials: 'include', // Include credentials (e.g., cookies) for cross-origin requests
+          credentials: 'include',
         });
-
+  
         if (response.ok) {
           const data = await response.json();
-          setIsLoggedIn(data.loggedIn); 
-          console.log(data.loggedIn)// Set isLoggedIn to the value received from the API
+          setIsLoggedIn(data.loggedIn);
+          console.log(data.loggedIn);
         } else {
-          setIsLoggedIn(false); // If the response is not okay, set isLoggedIn to false
+          // Handle non-OK response, e.g., display an error message or handle logout
+          console.error('Failed to fetch login status:', response.status);
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.error('An error occurred while checking login status:', error);
+        setIsLoggedIn(false);
       }
     };
-
+  
     checkLoginStatus();
   }, []);
-
+  
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       {children}

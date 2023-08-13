@@ -88,10 +88,10 @@ const ShowProfile: React.FC = () => {
       <div className="bg-white   backdrop-blur-sm">
         {userProfile && (
           <div className="w-full p-2">
-            <div className="h-40 bg-cover bg-center rounded-t-lg border-b border-gray-300" style={{ backgroundImage: `url(http://localhost:8000/${userProfile.profile.cover_pic})` }} />
+            <div className="h-40 bg-cover bg-center rounded-t-lg border-b border-gray-300" style={{ backgroundImage: `url(https://thinkdevs.onrender.com${userProfile.profile.cover_pic})` }} />
             <div className="p-6">
               <div className="relative mt-2">
-                <img src={`http://localhost:8000/${userProfile.profile.profile_pic}`} alt="Profile" className="w-16 h-16 rounded-full object-cover border-4 border-purple-600 -mt-16 ml-5 md:ml-8 md:-mt-16 sm:ml-8 sm:-mt-16 " />
+                <img src={`https://thinkdevs.onrender.com${userProfile.profile.profile_pic}`} alt="Profile" className="w-16 h-16 rounded-full object-cover border-4 border-purple-600 -mt-16 ml-5 md:ml-8 md:-mt-16 sm:ml-8 sm:-mt-16 " />
               </div>
               <div className="font-medium text-gray-800 mt-2 text-sm">@{userProfile.username}</div>
               <div className="font-medium text-gray-800 text-sm">{userProfile.profile.bio}</div>
