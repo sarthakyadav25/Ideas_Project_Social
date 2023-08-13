@@ -10,9 +10,9 @@ const AddButton: React.FC = () => {
 // TODO: adding addition butoon on just logged in users 
   return (
     
-    <div className=" fixed bottom-10 right-10  shadow-lg z-10">
+    <div className=" fixed  bottom-10 right-10  shadow-lg z-10 ">
       <button
-        className="px-4 py-2 text-white bg-black rounded-md font-bold"
+        className="px-4 py-2  w-[55px] h-[55px] text-white bg-black rounded-md font-bold"
         onClick={toggleDropdown}
       >
         +

@@ -166,7 +166,6 @@ const handleSubmit = async (event: React.FormEvent) => {
             <label className="block text-sm font-medium text-gray-700">Upload Image</label>
             <input
               type="file"
-              
               name="post_pic"
               onChange={handleFileChange}
               className="mt-1 p-2"

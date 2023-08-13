@@ -21,7 +21,7 @@ const CreateProfile: React.FC = () => {
       bio: '',
       email: '',
       interested_tech_stacks: '',
-      cover_pic: '/media/default_cover_pic.jpg', // Replace with actual URL
+      cover_pic: 'default_cover_pic.jpg', // Replace with actual URL
       profile_pic: '/media/profile_pics/default_profile_pic.jpg', // Replace with actual URL
       user: 0,
     },
@@ -42,26 +42,34 @@ const CreateProfile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-magenta-600">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-        <div
+    <div className="min-h-screen w-full flex items-start justify-center bg-transparent">
+      <div className="w-screen p-6 bg-white rounded-lg shadow-lg">
+        
+        <h2 className="text-xl font-semibold mt-4 mb-2 text-center">
+          Create Your Profile
+        </h2>
+        <form className="space-y-4">
+        
+          <div>
+          <div
           className="h-40 bg-cover bg-center rounded-t-lg"
           style={{
             backgroundImage: `url(${userProfile.profile.cover_pic})`,
           }}
         />
-        <div className="relative w-32 h-32 -mt-16 mx-auto">
+        <div className="relative w-16 h-16 -mt-8 ml-5 md:ml-8 md:-mt-8  sm:ml-8 sm:-mt-8 ">
+          <input 
+          type="file"
+          name="cover_pic"
+          // onChange={handleFileChange}
+          className="mt-1 p-2"
+        />
           <img
             src={userProfile.profile.profile_pic}
             alt="Profile"
             className="w-full h-full rounded-full object-cover border-4 border-white"
           />
         </div>
-        <h2 className="text-xl font-semibold mt-4 mb-2 text-center">
-          Create Your Profile
-        </h2>
-        <form className="space-y-4">
-          <div>
             <label htmlFor="username" className="font-medium">
               Username
             </label>

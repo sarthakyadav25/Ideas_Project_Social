@@ -6,38 +6,46 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/components/authContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaUser } from 'react-icons/fa';
+
 
 const Navbar: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
   const [username, setUsername] = useState('');
-
-  const userProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/profile', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-
-        },
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        const username = data.username;
-        setUsername(username); // Update the state with the username
-      } else {
-        console.error(data.message);
-      }
-    } catch (error) {
-      console.error('An error occurred while fetching projects');
-    }
-  };
+  const [profilePic, setProfilePic] = useState(''); // Stat
   useEffect(() => {
     if (isLoggedIn) {
       userProfile();
     }
-  }, []);
+  }, [isLoggedIn]);
+  const userProfile = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/profile`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData.profile.profile_pic);
+        setProfilePic(responseData.profile.profile_pic);
+        if(profilePic) {
+        console.log(profilePic);
+        }else console.log("Profile picture not fetched")
+        setUsername(responseData.username);
+
+      } else {
+        console.error('Failed to fetch user details');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   const handleLogout = async () => {
     try {
@@ -72,9 +80,7 @@ const Navbar: React.FC = () => {
     menu = (
       
       <div className='flex gap-3 md:gap-5'>
-        {username && (
-          <p className="text-black- text-sm mt-2">Welcome, {username}</p>
-        )}
+        
             <Link
               href='/Saved'
               className='rounded-full relative inline-flex items-center justify-center px-5 py-2.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white'
@@ -90,28 +96,45 @@ const Navbar: React.FC = () => {
               </span>
             </button>
                 
-            <Link href='/'  onClick={userProfile} className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-black'>
-              <img
-                src='next.svg'
-                width={37}
-                height={37}
-                alt='Profile Image'
-                className='rounded-full cursor-pointer  flex justify-center items-center'
-              />
+            <Link href=''  className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-purple-600'>
+            { profilePic ? (
+          <img
+          src={`http://localhost:8000/${profilePic}`}
+          width={45}
+          height={45}
+          className='rounded-full cursor-pointer '
+          alt={`profilePic`}
+          onClick={() => setToggleDropdown((prev) => !prev)}
+        />
+        ) :(
+          <FaUser className="w-4 h-4 text-gray" 
+          onClick={() => setToggleDropdown((prev) => !prev)}
+          />
+      )
+
+      }
             </Link>
           </div>
 
         );
     menuSm = (
       <div className='flex justify-center items-center w-[30px] h-[30px] rounded-full border-solid border-2 border-black'>
-      <img
-        src='next.svg'
-        width={37}
-        height={37}
-        className='rounded-full cursor-pointer '
-        alt='Profile Image'
-        onClick={() => setToggleDropdown((prev) => !prev)}
-      />
+      { profilePic ? (
+          <img
+          src={`http://localhost:8000/${profilePic}`}
+          width={37}
+          height={37}
+          className='rounded-full cursor-pointer '
+          alt={`profilePic`}
+          onClick={() => setToggleDropdown((prev) => !prev)}
+        />
+        ) :(
+          <FaUser className="w-4 h-4 text-gray" 
+          onClick={() => setToggleDropdown((prev) => !prev)}
+          />
+      )
+
+      }
       
       {toggleDropdown && (
         <div className='absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end,shadow-md'>
