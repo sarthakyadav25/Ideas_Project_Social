@@ -168,10 +168,7 @@ class ProfileApi(APIView):
                 except:
                     cover_pic = None
                 user = request.user
-                if Profile.objects.filter(user=user).exists():
-                    profile_object = Profile.objects.get(user=user)
-                    profile_object.bio = bio
-                profile_object = Profile.objects.create(user=user,bio=bio,profile_pic=profile_pic,cover_pic=cover_pic,interested_tech_stacks=interested_tech_stacks,email=user.email)
+                profile_object = Profile.objects.create(user=user,bio=bio,profile_pic=profile_pic,cover_pic=cover_pic,interested_tech_stacks=interested_tech_stacks,email=user.email,github_link=github_link,linkedin_link=linkedin_link,twitter_link=twitter_link,linktree_link=linktree_link)
                 profile_object.save()
                 return Response({
                     "message":"Profile Created Successfully"

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-a=j5wmd4@&12$n48_gtsvh3^h4_dc=jy$7hm$z+8ayvnmluskf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['thinkdevs.onrender.com', 'www.thinkdevs.onrender.com']
 
 
 # Application definition
@@ -36,9 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.staticfiles',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'corsheaders',
     'main_app',
     "django_nextjs",
@@ -138,7 +138,9 @@ CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -212,7 +214,7 @@ AUTHENTICATION_BACKENDS = [
 # Setup allauth parameters
 SITE_ID = 2
 # LOGIN_REDIRECT_URL :- destination of login page in your urls.py
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:3000/login'
 # ACCOUNT_LOGOUT_REDIRECT :- where to redirect when user logout
 ACCOUNT_LOGOUT_REDIRECT = '/'
 
