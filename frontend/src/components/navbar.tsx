@@ -7,6 +7,7 @@ import { useAuth } from '@/components/authContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUser } from 'react-icons/fa';
+import Cookies from 'js-cookie';
 
 
 const Navbar: React.FC = () => {
@@ -19,13 +20,13 @@ const Navbar: React.FC = () => {
     if (isLoggedIn) {
       userProfile();
     }
-  }, [isLoggedIn]);
+  }, []);
   const userProfile = async () => {
     try {
       const response = await fetch(`https://thinkdevs.onrender.com/api/profile`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${Cookies.get('access_token')}`,
         },
       });
 
@@ -57,6 +58,8 @@ const Navbar: React.FC = () => {
   
       if (response.ok) {
         setIsLoggedIn(false);
+        Cookies.remove('access_token');
+
         toast.success('Logged Out!', {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
@@ -99,7 +102,7 @@ const Navbar: React.FC = () => {
             <Link href='/Profile'  className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-purple-600'>
             { profilePic ? (
           <img
-          src={`http://localhost:8000/${profilePic}`}
+          src={`https://thinkdevs.onrender.com${profilePic}`}
           width={45}
           height={45}
           className='rounded-full cursor-pointer '
@@ -121,7 +124,7 @@ const Navbar: React.FC = () => {
       <div className='flex justify-center items-center w-[30px] h-[30px] rounded-full border-solid border-2 border-black'>
       { profilePic ? (
           <img
-          src={`http://localhost:8000/${profilePic}`}
+          src={`https://thinkdevs.onrender.com${profilePic}`}
           width={37}
           height={37}
           className='rounded-full cursor-pointer '
@@ -210,8 +213,6 @@ const Navbar: React.FC = () => {
 
       </div>
     </nav>
-
-
   );
 };
 

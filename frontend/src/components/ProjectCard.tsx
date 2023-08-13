@@ -222,7 +222,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className={`h-20  ${expanded ? 'from-[#00bfff] to-black' : 'from-[#ff00ff] to-[#ff00ff00]'} absolute bottom-0 left-0 right-0 `} />
         {project.post_pic && (
           <img 
-            src={`http://localhost:8000${project.post_pic}`}
+            src={`https://thinkdevs.onrender.com${project.post_pic}`}
             alt={project.title}
             className={`w-[94%] h-[300px] mt-3 object-cover position-start rounded-md ${expanded ? 'block' : 'hidden'} flex m-auto`}
           />
@@ -233,7 +233,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <div className="flex items-center justify-center flex-row space-x-2 ">
           {profilePic ? (
         <img
-          src={`http://localhost:8000/${profilePic}`}
+          src={`https://thinkdevs.onrender.com${profilePic}`}
           alt={project.username}
           className="w-7 h-7 rounded-full border-solid border-1 border-black"
         />
