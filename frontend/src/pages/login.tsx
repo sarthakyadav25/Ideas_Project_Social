@@ -2,7 +2,7 @@ import React, { useState, SyntheticEvent } from 'react';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import  {useAuth}  from '@/components/authContext';
 import Cookies from 'js-cookie';
 interface Errors {

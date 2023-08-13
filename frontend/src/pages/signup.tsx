@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 // Define types for errors
 interface Errors {

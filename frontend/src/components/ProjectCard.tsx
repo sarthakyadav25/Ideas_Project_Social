@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUser, FaGithub, FaLink, FaRegBookmark,FaBookmark, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useAuth } from './authContext';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface ProjectCardProps {
