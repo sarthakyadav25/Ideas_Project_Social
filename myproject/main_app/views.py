@@ -136,6 +136,22 @@ class ProfileApi(APIView):
                 except:
                     interested_tech_stacks = ""
                 try:
+                    github_link = request.data['github_link']
+                except:
+                    github_link = "#"
+                try:
+                    twitter_link = request.data['twitter_link']
+                except:
+                    twitter_link = "#"
+                try:
+                    linkedin_link = request.data['linkedin_link']
+                except:
+                    linkedin_link = "#"
+                try:
+                    linktree_link = request.data['linktree_link']
+                except:
+                    linktree_link = "#"
+                try:
                     profile_pic = request.data['profile_pic']
                     if not is_image_file(profile_pic.name):
                         return Response({
