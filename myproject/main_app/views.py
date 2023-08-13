@@ -339,7 +339,9 @@ class LikePostApi(APIView):
                 like_post_object.delete()
                 post_object.save()
                 return Response({
-                    'message':"Unliked the post"
+                    'message':"Unliked the post",
+                    'likesCount': post_object.no_of_likes ,
+                    'liked': False
                 },status=status.HTTP_200_OK)
             else:
                 like_post_object = LikedPost.objects.create(username=user.username,post_id=post_id)
@@ -348,7 +350,11 @@ class LikePostApi(APIView):
                 like_post_object.save()
                 post_object.save()
                 return Response({
-                    'message':"Post liked successfully"
+                    'message':"Post liked successfully",
+                    'likesCount': post_object.no_of_likes ,
+                    'username': user.username,
+                    'post_id': post_id,
+                    'liked': True
                 },status=status.HTTP_200_OK)
         except Exception as e:
             return Response({

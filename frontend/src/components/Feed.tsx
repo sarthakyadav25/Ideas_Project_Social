@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
 import FeedSelector from './FeedSelector';
 import ProjectCard from './ProjectCard';
 import { FaSearch } from 'react-icons/fa';
 import { useAuth } from './authContext';
+import { UUID } from 'crypto';
+import SkeletonLoadingCard from './SkeletonLoadingCard';
 
 interface Post {
-  id: number;
+  id: string;
   title: string;
   description: string;
   tech_stack: string;
@@ -15,48 +16,40 @@ interface Post {
   project_link_live: string;
   problem_statement: string;
   post_pic: string | null;
-    username: string;
-    profile_photo: string | null;
-
-  type: string;
-}
-interface User {
   username: string;
-  id: number;
-    bio: string;
-    email: string;
-    interested_tech_stacks: string; 
-    cover_pic: string | null;
-    profile_pic: string | null;
-    user: number;
-
+  isLiked: boolean;
+  isSaved: boolean;
+  type: string;
+  no_of_likes: number;
 }
 
-type FeedType = 'projects' | 'ideas';
+type FeedType = 'Project' | 'Idea' | '';
 
 const numPostsToLoad = 6; // Number of posts to load on each "Load More" click
 
 const ProjectList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [filterText, setFilterText] = useState('');
-  const [selectedFeed, setSelectedFeed] = useState<FeedType>('projects');
+  const [selectedFeed, setSelectedFeed] = useState<FeedType>('');
   const [numPostsToShow, setNumPostsToShow] = useState(numPostsToLoad);
   const [expandedStates, setExpandedStates] = useState<boolean[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
+
   useEffect(() => {
     fetchProjects();
   }, []);
 
-  const { isLoggedIn } = useAuth();
 
 
-  useEffect(() => {
-    console.log('userLoggedIn:', isLoggedIn);
-  }, []);
+
+
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/allposts', {
-      });
+      setIsLoading(true); 
+      
+      const response = await fetch('http://localhost:8000/api/allposts', {});
 
       const data = await response.json();
 
@@ -68,27 +61,25 @@ const ProjectList: React.FC = () => {
       }
     } catch (error) {
       console.error('An error occurred while fetching projects');
+    } finally {
+      setIsLoading(false); 
     }
   };
 
 
-  
-  
   const totalPosts = posts.length;
 
   const handleLoadMore = () => {
-    
-      const newNumPostsToShow = numPostsToShow + numPostsToLoad;
-      setNumPostsToShow(newNumPostsToShow);
+    const newNumPostsToShow = numPostsToShow + numPostsToLoad;
+    setNumPostsToShow(newNumPostsToShow);
 
-      if (newNumPostsToShow <= totalPosts) {
-        setPosts(posts.slice(0, newNumPostsToShow));
-
-    } 
+    if (newNumPostsToShow <= totalPosts) {
+      setPosts(posts.slice(0, newNumPostsToShow));
+    }
   };
 
   const filteredPosts = posts.filter((post) => {
-    if (!filterText  ) {
+    if (!filterText) {
       return true; // Show all posts if filterText is empty
     }
 
@@ -100,14 +91,18 @@ const ProjectList: React.FC = () => {
       post.problem_statement.toLowerCase().includes(lowerCaseFilter);
 
     return searchTermInPost;
-    
   });
 
-  const visiblePosts = filteredPosts.slice(0, numPostsToShow);
-
+  const visiblePosts = filteredPosts.filter((post) =>
+    selectedFeed !== '' ? post.type === selectedFeed : true
+  );
+  const filteredVisiblePosts = filteredPosts.filter((post) =>
+  selectedFeed ? post.type === selectedFeed : true
+);
   return (
     <div className="bg-none min-h-screen p-8 flex justify-start items-center  flex-col gap-5 max-w-full">
       <FeedSelector selectedFeed={selectedFeed} onSelectFeed={setSelectedFeed} />
+
       <div className="relative flex items-center justify-center">
         <input
           type="text"
@@ -121,9 +116,13 @@ const ProjectList: React.FC = () => {
           <FaSearch className="text-gray-400" />
         </div>
       </div>
-      <div className="grid gap-5 md:grid-cols-1">
+
+      {isLoading ? (
+        <SkeletonLoadingCard />
+  ) : (
+    <div className="grid gap-5 md:grid-cols-1">
         {visiblePosts.length > 0 ? (
-          visiblePosts.map((post, index,) => (
+          visiblePosts.map((post, index) => (
             <ProjectCard
               key={post.id}
               project={post}
@@ -132,15 +131,17 @@ const ProjectList: React.FC = () => {
         ) : (
           <p className="text-center text-gray-500 mt-4 ">No matching innovations found.</p>
         )}
-        {numPostsToShow < totalPosts &&  (
+      </div>
+  )}
+      
+        {/* {numPostsToShow < totalPosts && (
           <button
             className="mt-4 bg-[#ff00ff] w-[200px] text-white py-2 px-4 rounded-md hover:bg-white hover:text-[#ff00ff] border border-[#ff00ff] transition duration-300 ease-in-out block m-auto"
             onClick={handleLoadMore}
           >
             Load More
           </button>
-        )}
-      </div>
+        )} */}
     </div>
   );
 };

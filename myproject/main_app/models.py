@@ -11,6 +11,10 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     email = models.CharField(max_length=100)
     interested_tech_stacks = models.CharField(max_length=100)
+    github_link = models.CharField(max_length=200,default="#")
+    twitter_link = models.CharField(max_length=200,default="#")
+    linkedin_link = models.CharField(max_length=200,default="#")
+    linktree_link = models.CharField(max_length=200,default="#")
     cover_pic = models.ImageField(upload_to='cover_pics',default='default_cover_pic.jpg')
     profile_pic = models.ImageField(upload_to='profile_pics',default='default_profile_pic.png')
 
