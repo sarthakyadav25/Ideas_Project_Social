@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
   }, [isLoggedIn]);
   const userProfile = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/profile`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/profile`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/logout', {
+      const response = await fetch('https://thinkdevs.onrender.com/api/logout', {
         method: 'GET',
         credentials: 'include',
       });
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
               </span>
             </button>
                 
-            <Link href=''  className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-purple-600'>
+            <Link href='/Profile'  className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-purple-600'>
             { profilePic ? (
           <img
           src={`http://localhost:8000/${profilePic}`}

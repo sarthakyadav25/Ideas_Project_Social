@@ -51,7 +51,7 @@ const handleSubmit = async (event: React.FormEvent) => {
       formData.append('post_pic', projectData.post_pic);
     }
 
-    const response = await fetch('http://localhost:8000/api/post_project', {
+    const response = await fetch('https://thinkdevs.onrender.com/api/post_project', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,

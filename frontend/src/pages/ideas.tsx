@@ -45,7 +45,7 @@ const handleSubmit = async (event: React.FormEvent) => {
     
   
 
-    const response = await fetch('http://localhost:8000/api/post_idea', {
+    const response = await fetch('https://thinkdevs.onrender.com/api/post_idea', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,

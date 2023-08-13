@@ -12,7 +12,7 @@ const metadata = {
   description: 'Think.Devs is a community of developers and designers who are passionate about creating the best products and services.',
 };
 const  checkStatus = async() => {
-  const response =  await fetch('http://localhost:8000/api/check', {
+  const response =  await fetch('https://thinkdevs.onrender.com/api/check', {
         method: 'GET',
         credentials: 'include',
       });

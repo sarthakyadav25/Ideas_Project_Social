@@ -49,7 +49,7 @@ const ProjectList: React.FC = () => {
     try {
       setIsLoading(true); 
       
-      const response = await fetch('http://localhost:8000/api/allposts', {});
+      const response = await fetch('https://thinkdevs.onrender.com/api/allposts', {});
 
       const data = await response.json();
 
