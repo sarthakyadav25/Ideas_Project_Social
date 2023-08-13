@@ -119,10 +119,10 @@ const ShowProfile: React.FC = () => {
           Your Posts
         </h2>
         {posts.map((post) => (
-          <div className="mb-5 flex flex-col items-center justify-center s">
-            <ProjectCard key={post.id} project={post} />
-          </div>
-        ))}
+  <div key={post.id} className="mb-5 flex flex-col items-center justify-center">
+    <ProjectCard project={post} />
+  </div>
+))}
       </div>
     </div>
   );

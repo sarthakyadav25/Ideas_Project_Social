@@ -57,6 +57,7 @@ const Login = () => {
         });
     
         const jwtToken = responseData.access; // Get the JWT token from the response data
+        localStorage.setItem('access_token', jwtToken);
         Cookies.set('access_token', jwtToken);
         document.cookie = `access_token=${jwtToken}; path=/; secure=true; samesite=lax`;
         router.push('/');
@@ -123,7 +124,7 @@ const Login = () => {
           {/* Don't have an account? Signup */}
           <div className="text-center">
             <p className="text-gray-700">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-primary-600">Sign up
               </Link>
             </p>
