@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/check', {
+        const response = await fetch('https://thinkdevs.onrender.com/api/check', {
           method: 'GET',
           credentials: 'include', // Include credentials (e.g., cookies) for cross-origin requests
         });

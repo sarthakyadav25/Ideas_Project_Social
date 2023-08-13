@@ -35,7 +35,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/login', {
+      const response = await fetch('https://thinkdevs.onrender.com/api/login', {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
@@ -71,21 +71,7 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-md min-w-[20rem] w-[25rem] sm:w-[full] max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-#f461a8">Login</h2>
         <div className="space-y-4">
-          {/* Login with Google */}
-          <button
-            className="flex items-center justify-center w-full py-2.5 px-6 bg-black text-white rounded-lg"
-            onClick={() => alert('Login with Google clicked!')}
-          >
-            Login with Google
-          </button>
-
-          {/* Login with GitHub */}
-          <button
-            className="flex items-center justify-center w-full py-2.5 px-6 bg-black text-white rounded-lg"
-            onClick={() => alert('Login with GitHub clicked!')}
-          >
-            Login with GitHub
-          </button>
+        
 
           {/* Login with Custom Fields */}
           <form className="space-y-4" onSubmit={handleSubmit} method="post">

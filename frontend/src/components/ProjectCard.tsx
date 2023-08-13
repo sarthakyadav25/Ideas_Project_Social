@@ -7,7 +7,18 @@ import Link from 'next/link';
 interface ProjectCardProps {
   project: Post;
 }
-
+interface UserProfile {
+  username: string;
+  profile: {
+    id: number;
+    bio: string;
+    email: string;
+    interested_tech_stacks: string;
+    cover_pic: string;
+    profile_pic: string;
+    user: number;
+  };
+}
 interface Post {
   id: string;
   title: string;
@@ -33,6 +44,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [profilePic, setProfilePic] = useState<string | null>(null); // State for profile picture
   const router = useRouter();
   const { isLoggedIn } = useAuth();
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
 
   useEffect(() => {
     setIsLiked(project.isLiked);
@@ -44,10 +59,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       fetchUserInfo();
     }
   }, [project.isLiked, project.isSaved, isLoggedIn]);
+  useEffect(() => {
+    async function fetchUserProfile() {
+      try {
+        const response = await fetch('https://thinkdevs.onrender.com/api/profile', {
+          method: 'GET',
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
 
+        if (response.ok) {
+          const data = await response.json();
+          setUserProfile(data);
+        } else {
+          console.error('Failed to fetch profile data');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchUserProfile();
+  }, []);
   const fetchUserInfo = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/getprofile/${project.username}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/getprofile/${project.username}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -68,7 +104,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const fetchSavedPosts = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/get_saved_posts`, // Adjust the API endpoint as needed
+        `https://thinkdevs.onrender.com/api/get_saved_posts`, // Adjust the API endpoint as needed
         {
           method: 'GET',
           headers: {
@@ -101,7 +137,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
       
       // Call the like post API and handle the response
-      const response = await fetch(`http://localhost:8000/api/like_post/${project.id}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/like_post/${project.id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -135,7 +171,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
 
       const response = await fetch(
-        `http://localhost:8000/api/save_post/${project.id}`,
+        `https://thinkdevs.onrender.com/api/save_post/${project.id}`,
         {
           method: 'GET',
           headers: {
@@ -156,6 +192,27 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/delete_post/${project.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        // Handle successful deletion
+        console.log('Post deleted successfully');
+        // You can implement further actions, like removing the post from the state or updating UI.
+      } else {
+        // Handle error
+        console.error('Failed to delete post');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -217,26 +274,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className={`mb-2 ${expanded ? '' : 'line-clamp-1'}`}>
           <p className="text-gray-600">{project.description}</p>
         </div>
-        <div className={`flex justify-start items-center gap-5 mt-2`}>
-          <div className="flex items-center space-x-1">
-            <FaGithub className="text-gray-600" />
-            <a
-              href={project.project_link_github}
-              className="text-gray-600 hover:underline"
-            >
-              GitHub
-            </a>
+        {
+          project.project_link_github && project.project_link_live && (
+            <div className={`flex justify-start items-center gap-5 mt-2`}>
+            <div className="flex items-center space-x-1">
+              <FaGithub className="text-gray-600" />
+              <a
+                href={project.project_link_github}
+                className="text-gray-600 hover:underline"
+              >
+                GitHub
+              </a>
+            </div>
+            <div className="flex items-center space-x-1">
+              <FaLink className="text-gray-600" />
+              <a
+                href={project.project_link_live}
+                className="text-gray-600 hover:underline"
+              >
+                Live
+              </a>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <FaLink className="text-gray-600" />
-            <a
-              href={project.project_link_live}
-              className="text-gray-600 hover:underline"
-            >
-              Live
-            </a>
-          </div>
-        </div>
+          )
+        }
+      
   
         {expanded && (
           <div>
@@ -254,7 +316,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <p className="mt-1 text-white-600">{project.problem_statement}</p>
           </div>
         )}
-        
+        {userProfile?.username === project.username && (
+        <div className="flex justify-end mt-3">
+          
+          <button className="text-white hover:underline p-2 rounded-md bg-red-600" onClick={() => setDeleteConfirmationOpen(true)}>Delete</button>
+        </div>
+      )}
+        {deleteConfirmationOpen && (
+  <div className="mt-3">
+    <p>Are you sure you want to delete this post?</p>
+    <button className="text-red-600 hover:underline" onClick={handleDelete}>Confirm Delete</button>
+    <button className="ml-2 text-blue-600 hover:underline" onClick={() => setDeleteConfirmationOpen(false)}>Cancel</button>
+  </div>
+)}
         <button
           className={`mt-2 text-purple-600 hover:text-purple-800`}
           onClick={toggleExpanded}

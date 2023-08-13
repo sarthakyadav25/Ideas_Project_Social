@@ -41,7 +41,7 @@ const Signup = () => {
       return;
     }
 
-    const response= await fetch('http://localhost:8000/api/register', {
+    const response= await fetch('https://thinkdevs.onrender.com/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password }),
@@ -63,24 +63,7 @@ const Signup = () => {
     <div className=" min-h-screen flex items-center justify-center ">
       <div className="bg-white p-8 rounded-lg shadow-md min-w-[20rem] w-[25rem] sm:w-[full] max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-#f461a8">Register to Think.Devs</h2>
-        <div className="space-y-4">
-          {/* Signup with Google */}
-          <button
-            className="flex items-center justify-center w-full py-2.5 px-6 border-2 border-black  text-black rounded-lg"
-            onClick={() => alert('Signup with Google clicked!')}
-          >
-            <FaGoogle className="mr-2" />
-            Sign up with Google
-          </button>
-
-          {/* Signup with GitHub */}
-          <button
-            className="flex items-center justify-center w-full py-2.5 px-6 border-solid border-2 border-black  text-black rounded-lg"
-            onClick={() => alert('Signup with GitHub clicked!')}
-          >
-            <FaGithub className="mr-2" />
-            Sign up with GitHub
-          </button>
+        
 
           {/* Signup with Custom Fields */}
           <form className="space-y-4" onSubmit={handleSubmit} method="post">
@@ -161,7 +144,6 @@ const Signup = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
