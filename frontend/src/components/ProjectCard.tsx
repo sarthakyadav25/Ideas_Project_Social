@@ -62,7 +62,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   useEffect(() => {
     async function fetchUserProfile() {
       try {
-        const response = await fetch('https://thinkdevs.onrender.com/profile', {
+        const response = await fetch('https://thinkdevs.onrender.com/api/profile', {
           method: 'GET',
           headers: {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -104,7 +104,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const fetchSavedPosts = async () => {
     try {
       const response = await fetch(
-        `https://thinkdevs.onrender.com/get_saved_posts`, // Adjust the API endpoint as needed
+        `https://thinkdevs.onrender.com/api/get_saved_posts`, // Adjust the API endpoint as needed
         {
           method: 'GET',
           headers: {
@@ -137,7 +137,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
       
       // Call the like post API and handle the response
-      const response = await fetch(`https://thinkdevs.onrender.com/like_post/${project.id}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/like_post/${project.id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -171,7 +171,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }
 
       const response = await fetch(
-        `https://thinkdevs.onrender.com/save_post/${project.id}`,
+        `https://thinkdevs.onrender.com/api/save_post/${project.id}`,
         {
           method: 'GET',
           headers: {
@@ -196,7 +196,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`https://thinkdevs.onrender.com/delete_post/${project.id}`, {
+      const response = await fetch(`https://thinkdevs.onrender.com/api/delete_post/${project.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
@@ -222,7 +222,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className={`h-20  ${expanded ? 'from-[#00bfff] to-black' : 'from-[#ff00ff] to-[#ff00ff00]'} absolute bottom-0 left-0 right-0 `} />
         {project.post_pic && (
           <img 
-            src={`http://localhost:8000${project.post_pic}`}
+            src={`https://thinkdevs.onrender.com${project.post_pic}`}
             alt={project.title}
             className={`w-[94%] h-[300px] mt-3 object-cover position-start rounded-md ${expanded ? 'block' : 'hidden'} flex m-auto`}
           />
@@ -233,7 +233,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <div className="flex items-center justify-center flex-row space-x-2 ">
           {profilePic ? (
         <img
-          src={`http://localhost:8000/${profilePic}`}
+          src={`https://thinkdevs.onrender.com${profilePic}`}
           alt={project.username}
           className="w-7 h-7 rounded-full border-solid border-1 border-black"
         />
