@@ -41,7 +41,6 @@ const CreateProfile: React.FC = () => {
       toast.error('Please fill in all required fields.');
       return;
     }
-    const router = useRouter();
 
     try {
       const form = new FormData();
@@ -64,7 +63,6 @@ const CreateProfile: React.FC = () => {
       });
 
       const data = await response.json();
-
       if (response.ok) {
         toast.success(data.message);
         console.log(data);
@@ -80,6 +78,8 @@ const CreateProfile: React.FC = () => {
           profile_pic: null,
           cover_pic: null,
         });
+        const router = useRouter();
+
         router.push('/');
       } else {
         toast.error(data.message);
