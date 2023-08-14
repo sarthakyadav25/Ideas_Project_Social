@@ -6,7 +6,7 @@ ThikDevs is an innovative social media platform tailor-made for the developer co
 
 - **Live Website:** Explore ThikDevs on our [Live Website](https://64d974680c870d651e251dcd--sparkling-cheesecake-7678a2.netlify.app/)
 
-- **GitHub Repository:** Contribute to ThikDevs by checking out our [GitHub Repository]([https://github.com/your-username/thikdevs](https://github.com/sarthakyadav07/Ideas_Project_Social/)
+- **GitHub Repository:** Contribute to ThikDevs by checking out our [GitHub Repository](https://github.com/sarthakyadav07/Ideas_Project_Social/)
 
 
 ## Why ThikDevs?
