@@ -1,0 +1,4 @@
+# netlify.toml
+[build]
+  command = "npm run build"
+  publish = ".next" # Set this to the correct directory where your Next.js build files are located
