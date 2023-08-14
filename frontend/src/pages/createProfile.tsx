@@ -16,6 +16,8 @@ interface FormData {
 }
 
 const CreateProfile: React.FC = () => {
+  const router = useRouter();
+
   const [formData, setFormData] = useState<FormData>({
     username: '',
     bio: '',
@@ -78,7 +80,6 @@ const CreateProfile: React.FC = () => {
           profile_pic: null,
           cover_pic: null,
         });
-        const router = useRouter();
 
         router.push('/');
       } else {
