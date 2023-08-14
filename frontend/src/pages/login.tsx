@@ -55,12 +55,12 @@ const Login = () => {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
         });
-    
+        router.push('/createProfile');
         const jwtToken = responseData.access; // Get the JWT token from the response data
         localStorage.setItem('access_token', jwtToken);
         Cookies.set('access_token', jwtToken);
         document.cookie = `access_token=${jwtToken}; path=/; secure=true; samesite=lax`;
-        router.push('/createProfile');
+        
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
