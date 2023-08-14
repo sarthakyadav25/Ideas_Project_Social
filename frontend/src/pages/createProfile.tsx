@@ -81,7 +81,7 @@ const CreateProfile: React.FC = () => {
           cover_pic: null,
         });
 
-        router.push('/');
+        router.push('/Profile');
       } else {
         toast.error(data.message);
       }
