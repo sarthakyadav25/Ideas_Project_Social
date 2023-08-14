@@ -8,44 +8,49 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUser } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+interface UserProfile {
+  username: string;
+  profile: {
+    id: number;
+    bio: string;
+    email: string;
+    interested_tech_stacks: string;
+    cover_pic: string;
+    profile_pic: string;
+    user: number;
+  };
+}
 
 
 const Navbar: React.FC = () => {
+
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [profilePic, setProfilePic] = useState(''); // Stat
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
   useEffect(() => {
-    if (isLoggedIn) {
-      userProfile();
-    }
-  }, []);
-  const userProfile = async () => {
-    try {
-      const response = await fetch(`https://thinkdevs.onrender.com/api/profile`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
+    async function fetchUserProfile() {
+      try {
+        const response = await fetch('https://thinkdevs.onrender.com/api/profile', {
+          method: 'GET',
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData.profile.profile_pic);
-        setProfilePic(responseData.profile.profile_pic);
-        if(profilePic) {
-        console.log(profilePic);
-        }else console.log("Profile picture not fetched")
-        setUsername(responseData.username);
-
-      } else {
-        console.error('Failed to fetch user details');
+        if (response.ok) {
+          const data = await response.json();
+          setUserProfile(data);
+        } else {
+          console.error('Failed to fetch profile data');
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
+    fetchUserProfile();
+  }, []);
 
 
   const handleLogout = async () => {
@@ -100,9 +105,9 @@ const Navbar: React.FC = () => {
             </button>
                 
             <Link href='/Profile'  className='flex justify-center items-center w-[45px] h-[45px] rounded-full border-solid border-2 border-purple-600'>
-            { profilePic ? (
+            { userProfile?.profile.profile_pic? (
           <img
-          src={`https://thinkdevs.onrender.com${profilePic}`}
+          src={`https://thinkdevs.onrender.com${userProfile.profile.profile_pic}`}
           width={45}
           height={45}
           className='rounded-full cursor-pointer '
@@ -122,9 +127,9 @@ const Navbar: React.FC = () => {
         );
     menuSm = (
       <div className='flex justify-center items-center w-[30px] h-[30px] rounded-full border-solid border-2 border-black'>
-      { profilePic ? (
+      {userProfile?.profile.profile_pic? (
           <img
-          src={`https://thinkdevs.onrender.com${profilePic}`}
+          src={`https://thinkdevs.onrender.com${userProfile.profile.profile_pic}`}
           width={37}
           height={37}
           className='rounded-full cursor-pointer '
