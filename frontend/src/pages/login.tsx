@@ -60,7 +60,7 @@ const Login = () => {
         localStorage.setItem('access_token', jwtToken);
         Cookies.set('access_token', jwtToken);
         document.cookie = `access_token=${jwtToken}; path=/; secure=true; samesite=lax`;
-        router.push('/');
+        router.push('/createProfile');
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
