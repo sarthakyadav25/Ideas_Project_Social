@@ -32,7 +32,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </Head>
       <AuthProvider>
           < Navbar />
-        <div className='app'>
+        <div className=' relative z-10 flex justify-center items-center flex-col gap-0 max-w-7xl sm:px-16 px-6'>
           <Component {...pageProps} />
           {/* </> */}
         </div>
