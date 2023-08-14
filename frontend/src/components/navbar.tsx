@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
       const response = await fetch(`https://thinkdevs.onrender.com/api/profile`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${Cookies.get('access_token')}`,
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
       });
 
